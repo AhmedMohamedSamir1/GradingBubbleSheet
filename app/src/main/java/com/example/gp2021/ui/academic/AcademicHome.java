@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.gp2021.BuildConfig;
 import com.example.gp2021.R;
 import com.example.gp2021.ui.academic.Fragment_Academic_Home;
 
