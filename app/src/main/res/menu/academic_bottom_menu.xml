@@ -1,0 +1,46 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cnb_unselectedColor="#fff"
+
+    >
+
+    <item
+        android:id="@+id/academic_page_1"
+        android:enabled="true"
+        android:icon="@drawable/home"
+        android:title="Home"
+        app:cnb_iconColor="#fff"
+        app:cnb_textColor="#fff"
+        app:cnb_backgroundColor="#ff785b"
+
+        />
+    <item
+        android:id="@+id/academic_page_2"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_mail_24"
+        android:title="Mail"
+        app:cnb_iconColor="#fff"
+        app:cnb_textColor="#fff"
+        app:cnb_backgroundColor="#ff785b"
+
+        />
+    <item
+        android:id="@+id/academic_page_3"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_import_export_24"
+        android:title="Export"
+        app:cnb_iconColor="#fff"
+        app:cnb_textColor="#fff"
+        app:cnb_backgroundColor="#ff785b"
+
+        />
+    <item
+        android:id="@+id/academic_page_4"
+        android:enabled="true"
+        android:icon="@drawable/profile"
+        android:title="Profile"
+        app:cnb_iconColor="#fff"
+        app:cnb_textColor="#fff"
+        app:cnb_backgroundColor="#ff785b"
+        />
+</menu>
