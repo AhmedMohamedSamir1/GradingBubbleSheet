@@ -1,6 +1,11 @@
 package com.example.gp2021.ui.instructor;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,12 +15,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.gp2021.R;
 import com.example.gp2021.ui.login.LoginActivity;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -27,16 +36,26 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.facebook.FacebookSdk.getCacheDir;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link FragmentProfile#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentProfile extends Fragment  {
+public class FragmentProfile extends Fragment {
     GoogleSignInClient mGoogleSignInClient;
     public static GoogleApiClient mGoogleApiClient;
 
@@ -75,6 +94,7 @@ public class FragmentProfile extends Fragment  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -82,13 +102,14 @@ public class FragmentProfile extends Fragment  {
 
 
     }
+
     View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       view=inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         Button upButton = (Button) view.findViewById(R.id.sign_out_buttonGoogle);
         //upButton.setOnClickListener(this);
@@ -99,6 +120,25 @@ public class FragmentProfile extends Fragment  {
 
                 signOut();
 
+
+            }
+        });
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        ((TextView) view.findViewById(R.id.txt_profile_email)).setText(user.getEmail());
+        ((TextView) view.findViewById(R.id.txt_profile_Username)).setText(user.getDisplayName());
+        Uri im = user.getPhotoUrl();
+        String t = im.toString();
+        CircleImageView imgg = view.findViewById(R.id.profile_image);
+
+        /*Picasso.get().load(user.getPhotoUrl()).into(imgg);
+        Picasso.get().setLoggingEnabled(true);*/ //worked :)
+
+        Glide.with(getContext()).load(user.getPhotoUrl()).into(imgg);
+        view.findViewById(R.id.DeleteAppData).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //clearApplicationData();
+                ((ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE)).clearApplicationUserData();
 
             }
         });
@@ -124,7 +164,6 @@ public class FragmentProfile extends Fragment  {
     }
 
 
-
     @Override
     public void onStart() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -136,4 +175,6 @@ public class FragmentProfile extends Fragment  {
         mGoogleApiClient.connect();
         super.onStart();
     }
+
+
 }

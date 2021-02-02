@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.database.CursorWindow;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
 
@@ -30,9 +31,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.gp2021.BuildConfig;
 import com.example.gp2021.R;
 import com.example.gp2021.ui.academic.AcademicHome;
+import com.example.gp2021.ui.instructor.FragmentProfile;
 import com.example.gp2021.ui.instructor.InstructorHome;
 import com.example.gp2021.ui.login.LoginViewModel;
 import com.example.gp2021.ui.login.LoginViewModelFactory;
@@ -68,6 +71,9 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -106,7 +112,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         com.facebook.login.widget.LoginButton fbLogin = new LoginButton(this);
-
         ImageView fbLogin2=(ImageView)findViewById(R.id.signinFacebook);
         fbLogin2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -340,6 +345,8 @@ public class LoginActivity extends AppCompatActivity {
     void updateUI(FirebaseUser account) {
 
         if (account != null) {
+          //  ImageView img =findViewById(R.id.profile_image);
+//if(account.getPhotoUrl()!=null)Picasso.get().load(account.getPhotoUrl()).into(img);
 
             Toast.makeText(getApplicationContext(), "Email= " + account.getEmail(), Toast.LENGTH_LONG).show();
             if (account.getEmail().equals("ibrahimkelany98@gmail.com")) {

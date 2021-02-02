@@ -63,6 +63,7 @@ public class AcademicHome extends AppCompatActivity implements ChipNavigationBar
         animationDrawable.setExitFadeDuration(2000);
         navView = findViewById(R.id.bottom_navigation2);
         navView.setOnItemSelectedListener(this);
+
         //  navView.setItemSelected(0,true);
 
 

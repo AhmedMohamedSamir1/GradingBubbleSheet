@@ -6,12 +6,67 @@
     android:layout_height="match_parent"
     tools:context=".ui.instructor.FragmentProfile">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/DeleteAppData"
+        android:src="@drawable/ic_baseline_warning_24">
+
+    </ImageView>
+
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:orientation="vertical"
+        android:scrollbarThumbHorizontal="@null"
+        android:scrollbarThumbVertical="@null"
         >
+      <!-- <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/dummy_image"
+          />-->
+
+       <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/dummy_image"
+          />
+
+        <TextView
+
+            android:id="@+id/txt_profile_Username"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UserEmail"
+            android:textSize="16sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/white"
+
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold" />
+        <TextView
+
+            android:id="@+id/txt_profile_email"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UserEmail"
+            android:textSize="16sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/white"
+
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold" />
     <Button
         android:id="@+id/sign_out_buttonGoogle"
         android:layout_width="wrap_content"
