@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:background="@android:color/transparent"
         app:navigationIcon="@drawable/ic_back"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
     </androidx.appcompat.widget.Toolbar>
 
@@ -44,18 +44,21 @@
                     android:orientation="vertical"
                     android:layout_marginBottom="8dp">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/image"
+                    <ImageView
+                        android:id="@+id/imageProfile"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
                         android:src="@drawable/dummy_image" />
+
+
+
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_margin="1dp"
                         android:textColor="@color/md_black_1000"
-
+                        android:id="@+id/pick_Profile_image"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
@@ -275,7 +278,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <Button
-                    android:id="@+id/button_signin"
+                    android:id="@+id/button_Finish_signup"
                     style="@style/Button1"
                     android:layout_width="342dp"
                     android:layout_height="wrap_content"
@@ -308,11 +311,14 @@
                         <ImageView
                             android:layout_margin="8dp"
                             app:srcCompat="@drawable/googf"
+                            android:id="@+id/sign_up_buttonGoogle"
+
                             android:layout_width="40dp"
                             android:layout_height="40dp" />
 
                         <ImageView
                             android:layout_margin="8dp"
+                            android:id="@+id/sign_up_buttonface"
                             app:srcCompat="@drawable/ic_facebook"
                             android:layout_width="40dp"
                             android:layout_height="40dp" />

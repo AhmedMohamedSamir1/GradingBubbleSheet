@@ -1,7 +1,9 @@
 package com.example.gp2021.ui.instructor;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,9 +36,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -67,6 +73,7 @@ public class FragmentProfile extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    //StorageReference storageReference;
 
     public FragmentProfile() {
         // Required empty public constructor
@@ -94,6 +101,7 @@ public class FragmentProfile extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
+        //storageReference = FirebaseStorage.getInstance().getReference();
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -123,17 +131,123 @@ public class FragmentProfile extends Fragment {
 
             }
         });
+        view.findViewById(R.id.DeactivateMyAccount).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                builder1.setMessage("Are you sure to delete your account ?");
+                builder1.setTitle("Confirmation");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                FirebaseAuth.getInstance().getCurrentUser().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                        Toast.makeText(getApplicationContext(),"Account deleted .. ",Toast.LENGTH_SHORT).show();
+                                        upButton.performClick();
+
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(),"failed to delete account .. ",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+
+
+
+
+
+
+                                dialog.cancel();
+
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+            }
+        });
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         ((TextView) view.findViewById(R.id.txt_profile_email)).setText(user.getEmail());
         ((TextView) view.findViewById(R.id.txt_profile_Username)).setText(user.getDisplayName());
         Uri im = user.getPhotoUrl();
-        String t = im.toString();
+       // String t = im.toString();
         CircleImageView imgg = view.findViewById(R.id.profile_image);
 
         /*Picasso.get().load(user.getPhotoUrl()).into(imgg);
         Picasso.get().setLoggingEnabled(true);*/ //worked :)
-
+/*
         Glide.with(getContext()).load(user.getPhotoUrl()).into(imgg);
+        StorageReference fileref=storageReference.child(user.getEmail()+".jpg");
+
+        fileref.child(user.getEmail()+".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                Glide.with(getApplicationContext()).load(uri).into(imgg);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });*/
+
+
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://gp2021-1611887093753.appspot.com/");
+        StorageReference pathReference = storageRef.child(user.getUid()+".jpg");
+        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(imgg);
+               // imgg.setImageURI(uri);
+
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Picasso.get().load(user.getPhotoUrl()).into(imgg);
+            }
+        });
+       /* FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://gp2021-1611887093753.appspot.com/");
+        StorageReference islandRef = storageRef.child("profile.jpg");
+        final long ONE_MEGABYTE = 1024 * 1024;
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                Toast.makeText(getApplicationContext(),"Done",Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Toast.makeText(getApplicationContext(),"Failed",Toast.LENGTH_SHORT).show();
+
+            }
+        });*/
         view.findViewById(R.id.DeleteAppData).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

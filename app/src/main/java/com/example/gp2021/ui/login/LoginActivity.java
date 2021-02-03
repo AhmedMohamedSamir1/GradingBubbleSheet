@@ -52,6 +52,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
@@ -74,6 +76,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import android.app.Activity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -81,6 +84,8 @@ public class LoginActivity extends AppCompatActivity {
     private AnimationDrawable animationDrawable;
     private LoginViewModel loginViewModel;
     private static final String EMAIL = "email";
+    public static Activity myActivity;
+
     private AccessTokenTracker accessTokenTracker;
    // LoginButton fbLogin;
     GoogleSignInClient mGoogleSignInClient;
@@ -93,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
+        LoginActivity.myActivity=this;
 
         mAuth=FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -263,8 +269,27 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                //loginViewModel.login(usernameEditText.getText().toString(),passwordEditText.getText().toString());
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(usernameEditText.getText().toString(),passwordEditText.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        Toast.makeText(getApplicationContext(), "Done withmail" , Toast.LENGTH_LONG).show();
+                        loadingProgressBar.setVisibility(View.GONE);
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Email or password incorrect !" , Toast.LENGTH_SHORT).show();
+
+                        loadingProgressBar.setVisibility(View.GONE);
+
+
+                    }
+                });
+
+
             }
         });
     }
