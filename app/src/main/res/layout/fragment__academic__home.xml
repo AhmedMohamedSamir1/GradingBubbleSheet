@@ -26,6 +26,7 @@
             android:orientation="vertical"
             android:id="@+id/academic_homeContainer"
             tools:layout_editor_absoluteX="0dp"
+
             tools:layout_editor_absoluteY="-4dp">
 
 
@@ -81,6 +82,62 @@
                 android:background="@drawable/generate3">
 
             </ImageView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add or remove students"
+                android:textSize="20dp" />
+
+
+            <RelativeLayout
+                android:id="@+id/student_lay"
+                android:layout_gravity="center"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:orientation="vertical"
+                android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/students" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom||right"
+
+                android:orientation="horizontal" >
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="1dp"
+                    android:textColor="@color/md_black_1000"
+                    android:id="@+id/removeStudent_ImageButton"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:srcCompat="@drawable/minus" />
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="1dp"
+                    android:textColor="@color/md_black_1000"
+                    android:id="@+id/addStudent_ImageButton"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:srcCompat="@drawable/ic_plus" />
+
+            </LinearLayout>
+
+
+            </RelativeLayout>
 
 
         </LinearLayout>
