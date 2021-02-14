@@ -1,5 +1,6 @@
 package com.example.gp2021.ui.login;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.dd.CircularProgressButton;
 import com.example.gp2021.BuildConfig;
 import com.example.gp2021.R;
 import com.example.gp2021.ui.academic.AcademicHome;
@@ -45,6 +48,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.shimmer.Shimmer;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -73,6 +78,7 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.royrodriguez.transitionbutton.TransitionButton;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -85,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private static final String EMAIL = "email";
     public static Activity myActivity;
-
+    public TransitionButton loginButton;
     private AccessTokenTracker accessTokenTracker;
    // LoginButton fbLogin;
     GoogleSignInClient mGoogleSignInClient;
@@ -99,6 +105,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
         LoginActivity.myActivity=this;
+
+
 
         mAuth=FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -175,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
                         .get(LoginViewModel.class);
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
+        loginButton = (TransitionButton)findViewById(R.id.loginbtn);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
        /* GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -264,32 +272,70 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
+        //loginButton.setIndeterminateProgressMode(true);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                //loginViewModel.login(usernameEditText.getText().toString(),passwordEditText.getText().toString());
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(usernameEditText.getText().toString(),passwordEditText.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        Toast.makeText(getApplicationContext(), "Done withmail" , Toast.LENGTH_LONG).show();
-                        loadingProgressBar.setVisibility(View.GONE);
+                // loadingProgressBar.setVisibility(View.VISIBLE);
+
+                if (!usernameEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")) {
+                    loginButton.startAnimation();
+
+                    // Do your networking task or background work here.
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            final boolean[] isSuccessful = new boolean[1];
 
 
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Email or password incorrect !" , Toast.LENGTH_SHORT).show();
-
-                        loadingProgressBar.setVisibility(View.GONE);
-
-
-                    }
-                });
+                            FirebaseAuth.getInstance().signInWithEmailAndPassword(usernameEditText.getText().toString(), passwordEditText.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    isSuccessful[0] = true;
+                                    loginButton.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, new TransitionButton.OnAnimationStopEndListener() {
+                                        @Override
+                                        public void onAnimationStopEnd() {
+                                            Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
 
 
+                                  /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                    startActivity(intent);*/
+                                            //HEEEEEEEEEEEEEEEEEEEEERE
+
+                                        }
+                                    });
+
+
+                                    //loadingProgressBar.setVisibility(View.GONE);
+
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Email or password incorrect !", Toast.LENGTH_SHORT).show();
+
+                                    loginButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+
+                                    isSuccessful[0] = false;
+                                    //loadingProgressBar.setVisibility(View.GONE);
+
+
+                                }
+                            });
+
+
+                        }
+                    }, 2000);
+
+
+                    //loginViewModel.login(usernameEditText.getText().toString(),passwordEditText.getText().toString());
+
+
+                }
             }
         });
     }
@@ -381,6 +427,7 @@ public class LoginActivity extends AppCompatActivity {
                 Acade.putExtra(EXTRA_MESSAGE, account);
 
                 startActivity(Acade);
+
 
             } else {
                 // Toast.makeText(getApplicationContext(), "Instructor", Toast.LENGTH_LONG).show();

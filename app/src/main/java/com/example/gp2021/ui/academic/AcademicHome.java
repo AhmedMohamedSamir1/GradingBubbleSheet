@@ -24,6 +24,7 @@ import com.example.gp2021.R;
 import com.example.gp2021.ui.academic.Fragment_Academic_Home;
 
 import com.example.gp2021.ui.instructor.FragmentProfile;
+import com.example.gp2021.ui.instructor.fragmentMail;
 import com.example.gp2021.ui.login.LoginViewModel;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -132,7 +133,7 @@ public class AcademicHome extends AppCompatActivity implements ChipNavigationBar
             case R.id.academic_page_2: //Mail
                 
 
-               // fragment=new fragmentMail();
+            //  fragment=new fragmentMail();
                 break;
             case R.id.academic_page_3: //Export
                 // navView.setSelectedItemId(R.id.Cart);

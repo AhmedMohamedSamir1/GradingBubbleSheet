@@ -100,74 +100,76 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                 EmailAddress = ((TextInputEditText) findViewById(R.id.et_email)).getText().toString();
+                EmailAddress = ((TextInputEditText) findViewById(R.id.et_email)).getText().toString();
                 String UserName = ((TextInputEditText) findViewById(R.id.et_username)).getText().toString();
                 String PhoneNumber = ((TextInputEditText) findViewById(R.id.et_phone)).getText().toString();
                 String Password = ((EditText) findViewById(R.id.et_password)).getText().toString();
                 String ConfirmPassword = ((EditText) findViewById(R.id.et_confirm_password)).getText().toString();
-                if (Password.equals(ConfirmPassword)) {
+                if (!EmailAddress.equals("") && !UserName.equals("") && !PhoneNumber.equals("") && !Password.equals("") && !ConfirmPassword.equals("")) {
+                    if (Password.equals(ConfirmPassword)) {
 
-                    mAuth.createUserWithEmailAndPassword(EmailAddress, Password).addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Email= " + EmailAddress, Toast.LENGTH_LONG).show();
+                        mAuth.createUserWithEmailAndPassword(EmailAddress, Password).addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(), "Email= " + EmailAddress, Toast.LENGTH_LONG).show();
 
                                /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(UserName)
                                         .setPhotoUri(ProfImgURI)
                                         .build();*/
-                                UploadImageToFirebase();
+                                    UploadImageToFirebase();
 
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(UserName)
-                                        .setPhotoUri(ProfImgURI)
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(UserName)
+                                            .setPhotoUri(ProfImgURI)
 
-                                        .build();
-                                user.updateProfile(profileUpdates)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(getApplicationContext(), "UserNameAdded", Toast.LENGTH_LONG).show();
+                                            .build();
+                                    user.updateProfile(profileUpdates)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(getApplicationContext(), "UserNameAdded", Toast.LENGTH_LONG).show();
+                                                    }
                                                 }
-                                            }
-                                        });
-                                if (EmailAddress.equals("ibrahimkelany98@gmail.com")) {
+                                            });
+                                    if (EmailAddress.equals("ibrahimkelany98@gmail.com")) {
 
 
-                                    Intent Acade = new Intent(getApplicationContext(), AcademicHome.class);
+                                        Intent Acade = new Intent(getApplicationContext(), AcademicHome.class);
 
 
-                                    startActivity(Acade);
+                                        startActivity(Acade);
 
-                                } else {
-                                    // Toast.makeText(getApplicationContext(), "Instructor", Toast.LENGTH_LONG).show();
-                                    Intent instructorActivity = new Intent(getApplicationContext(), InstructorHome.class);
+                                    } else {
+                                        // Toast.makeText(getApplicationContext(), "Instructor", Toast.LENGTH_LONG).show();
+                                        Intent instructorActivity = new Intent(getApplicationContext(), InstructorHome.class);
 
 
-                                    startActivity(instructorActivity);
+                                        startActivity(instructorActivity);
+
+                                    }
+
+                                } else //failed
+                                {
+                                    Toast.makeText(getApplicationContext(), "Failed Try Again", Toast.LENGTH_LONG).show();
 
                                 }
-
-                            } else //failed
-                            {
-                                Toast.makeText(getApplicationContext(), "Failed Try Again", Toast.LENGTH_LONG).show();
-
                             }
-                        }
-                    });
+                        });
 
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "Passwords not same ", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Passwords not same ", Toast.LENGTH_LONG).show();
+
+
+                    }
 
 
                 }
-
-
             }
         });
 
@@ -178,7 +180,7 @@ public class SignupActivity extends AppCompatActivity {
         fileref.putFile(ProfImgURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(getApplicationContext(),"ImageUploaded Done",Toast.LENGTH_SHORT).show();
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

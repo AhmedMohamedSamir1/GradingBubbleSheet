@@ -50,7 +50,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import tyrantgit.explosionfield.ExplosionField;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -134,53 +136,66 @@ public class FragmentProfile extends Fragment {
         view.findViewById(R.id.DeactivateMyAccount).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                builder1.setMessage("Are you sure to delete your account ?");
-                builder1.setTitle("Confirmation");
-                builder1.setCancelable(true);
-
-                builder1.setPositiveButton(
-                        "Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                                FirebaseAuth.getInstance().getCurrentUser().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-
-                                        Toast.makeText(getApplicationContext(),"Account deleted .. ",Toast.LENGTH_SHORT).show();
-                                        upButton.performClick();
-
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getApplicationContext(),"failed to delete account .. ",Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
 
 
 
 
 
+                new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Confirmation")
+                        .setContentText("Are you sure to delete your account ?")
+                        .setCancelText("No")
+                        .setConfirmText("Yes")
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
 
-                                dialog.cancel();
+
+                                sDialog.cancel();
+                            }
+                        }).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+
+
+                        FirebaseAuth.getInstance().getCurrentUser().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                                Toast.makeText(getApplicationContext(),"Account deleted .. ",Toast.LENGTH_SHORT).show();
+                                ExplosionField explosionField = ExplosionField.attach2Window(getActivity());
+                                explosionField.explode(view);
+                                upButton.performClick();
+
 
                             }
+
                         });
 
-                builder1.setNegativeButton(
-                        "No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
 
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
+
+
+
+
+
+
+
+                        sweetAlertDialog.dismissWithAnimation();
+
+                    }
+                })
+                        .show();
+
+
+
+
+
+
+
+
+
             }
         });
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

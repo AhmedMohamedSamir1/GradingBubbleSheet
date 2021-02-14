@@ -22,15 +22,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:shimmer_shape="radial"
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="2000"
+                app:shimmer_repeat_mode="reverse"
+                android:id="@+id/shimmer_view_container"
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="32dp"
-                android:scaleType="centerInside"
-                app:srcCompat="@drawable/app_logo_2" />
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="32dp"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/app_logo_2" />
+
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -141,16 +154,20 @@
 
                 android:text="@string/text_forgot_password" />
 
-            <Button
-                android:id="@+id/login"
+            <com.royrodriguez.transitionbutton.TransitionButton
+                android:id="@+id/loginbtn"
                 style="@style/Button1"
                 android:layout_width="342dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button1_bg"
                 android:layout_gravity="center"
-
                 android:layout_marginTop="16dp"
-                android:text="@string/button_sign_in" />
+                android:background="@drawable/button1_bg"
+
+                android:text="Sign in"
+                app:defaultColor="#00B6FF"
+                app:loaderColor="#00FFBD"
+                android:textColor="#FFFFFF" />
+                app:cpb_cornerRadius="48dp" />
 
             <LinearLayout
                 android:id="@+id/social_layout"

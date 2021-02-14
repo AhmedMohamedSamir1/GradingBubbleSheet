@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/drawable_gradient_animation_list"
 
     tools:context=".ui.academic.Fragment_Academic_Home">
 
@@ -110,7 +109,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="bottom||right"
+                android:gravity="bottom"
 
                 android:orientation="horizontal" >
                 <ImageView
@@ -119,9 +118,7 @@
                     android:layout_margin="1dp"
                     android:textColor="@color/md_black_1000"
                     android:id="@+id/removeStudent_ImageButton"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
+
                     app:srcCompat="@drawable/minus" />
                 <ImageView
                     android:layout_width="32dp"
@@ -129,9 +126,7 @@
                     android:layout_margin="1dp"
                     android:textColor="@color/md_black_1000"
                     android:id="@+id/addStudent_ImageButton"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
+
                     app:srcCompat="@drawable/ic_plus" />
 
             </LinearLayout>
