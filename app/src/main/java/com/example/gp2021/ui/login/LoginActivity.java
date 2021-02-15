@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.database.CursorWindow;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.nfc.Tag;
@@ -78,12 +79,16 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.muddzdev.styleabletoast.StyleableToast;
 import com.royrodriguez.transitionbutton.TransitionButton;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import tyrantgit.explosionfield.ExplosionField;
+
 import android.app.Activity;
 
+//import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
 public class LoginActivity extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
@@ -419,7 +424,9 @@ public class LoginActivity extends AppCompatActivity {
           //  ImageView img =findViewById(R.id.profile_image);
 //if(account.getPhotoUrl()!=null)Picasso.get().load(account.getPhotoUrl()).into(img);
 
-            Toast.makeText(getApplicationContext(), "Email= " + account.getEmail(), Toast.LENGTH_LONG).show();
+          //  Toast.makeText(getApplicationContext(), "Email= " + account.getEmail(), Toast.LENGTH_LONG).show();
+          StyleableToast.makeText(getApplicationContext(),account.getEmail() , Toast.LENGTH_LONG, R.style.toaststyle).show();
+
             if (account.getEmail().equals("ibrahimkelany98@gmail.com")) {
 
 
@@ -506,7 +513,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            StyleableToast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT,R.style.toaststyle).show();
                             updateUI(null);
                         }
 

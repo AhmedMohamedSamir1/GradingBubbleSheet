@@ -12,6 +12,29 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="toaststyle">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#000</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#388E3C</item>
+        <item name="stStrokeWidth">2dp</item>
+        <item name="stStrokeColor">#FBC02D</item>
+        <item name="stIconStart">@drawable/logo</item>
+        <item name="stLength">LONG</item>
+        <item name="stFont">@font/bellerose</item>
+    </style>
+    <style name="toastErrortyle">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#000</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#FFFF5000</item>
+        <item name="stStrokeWidth">2dp</item>
+        <item name="stStrokeColor">#FBC02D</item>
+        <item name="stIconStart">@drawable/minus</item>
+        <item name="stLength">SHORT</item>
+        <item name="stFont">@font/bellerose</item>
+
+    </style>
     <style name="Button1" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/button1_bg</item>
         <item name="android:minWidth">200dp</item>

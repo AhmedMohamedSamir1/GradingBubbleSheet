@@ -43,6 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.muddzdev.styleabletoast.StyleableToast;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -164,7 +165,7 @@ public class FragmentProfile extends Fragment {
                             @Override
                             public void onSuccess(Void aVoid) {
 
-                                Toast.makeText(getApplicationContext(),"Account deleted .. ",Toast.LENGTH_SHORT).show();
+                                StyleableToast.makeText(getApplicationContext(),"Account deleted .. ", Toast.LENGTH_SHORT,R.style.toastErrortyle).show();
                                 ExplosionField explosionField = ExplosionField.attach2Window(getActivity());
                                 explosionField.explode(view);
                                 upButton.performClick();
@@ -286,7 +287,7 @@ public class FragmentProfile extends Fragment {
                     }
                 });*/
         FirebaseAuth.getInstance().signOut();
-        Toast.makeText(getContext(), "Logged Out", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Logged Out", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(getContext(), LoginActivity.class);
         startActivity(i);
 

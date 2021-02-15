@@ -68,6 +68,7 @@ dependencies {
     implementation 'com.github.f0ris.sweetalert:library:1.5.1'
     implementation 'tyrantgit:explosionfield:1.0.1'
 
+    implementation 'com.muddzdev:styleabletoast:2.2.3'
 
 
 
