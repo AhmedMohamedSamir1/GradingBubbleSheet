@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
-import com.example.gp2021.data.model.exam;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
-import java.util.HashMap;
 
 public class CreateExam extends AppCompatActivity {
 
@@ -101,7 +99,7 @@ public class CreateExam extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(!snapshot.child("exam").child(examID).exists())
                     {
-                        exam examData = new exam(examID,examName,examDate,examGrade,userID);
+                        exam1 examData = new exam1(examID,examName,examDate,examGrade,userID);
                         rootRef.child("exam").child(examID).setValue(examData);
                         rootRef.child("exam").child(examID).setValue(examData).addOnCompleteListener(new OnCompleteListener<Void>() {
 
