@@ -6,15 +6,47 @@
     tools:context=".ui.instructor.fragmentMail">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
+   <LinearLayout
+       android:orientation="vertical"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+
+       >
+
+
+
+       <TextView
+           android:id="@+id/xView"
+           android:layout_above="@+id/areditor"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="1dp"
+
+           android:gravity="center"
+           android:textSize="25sp"
+           android:text="Send grades with notes to your students"
+           />
+
+      
+       <EditText
+           android:id="@+id/msgContent"
+           android:layout_width="match_parent"
+           android:layout_height="285dp"
+           android:layout_alignParentBottom="true"
+           android:background="@android:color/holo_green_dark" />
     <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:id="@+id/SenEmailBtn"
+        style="@style/Button1"
+        android:layout_width="342dp"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+
+        android:text="Send" />
+
+
+   </LinearLayout>
 
 </FrameLayout>

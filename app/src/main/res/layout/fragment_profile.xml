@@ -50,7 +50,7 @@
             android:textSize="16sp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:textColor="@color/white"
+            android:textColor="@color/colorGreen_A400"
 
             android:layout_marginBottom="16dp"
             android:textStyle="bold" />
@@ -64,7 +64,7 @@
             android:textSize="16sp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
 
             android:layout_marginBottom="16dp"
             android:textStyle="bold" />

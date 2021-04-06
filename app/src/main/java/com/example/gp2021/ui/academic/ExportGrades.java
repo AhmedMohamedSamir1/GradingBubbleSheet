@@ -1,24 +1,21 @@
-package com.example.gp2021.ui.instructor;
+package com.example.gp2021.ui.academic;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.example.gp2021.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link fragment1Home#newInstance} factory method to
+ * Use the {@link ExportGrades#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class fragment1Home extends Fragment implements View.OnClickListener {
+public class ExportGrades extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,7 +25,8 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    public fragment1Home() {
+
+    public ExportGrades() {
         // Required empty public constructor
     }
 
@@ -38,18 +36,15 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment fragment1Home.
+     * @return A new instance of fragment ExportGrades.
      */
     // TODO: Rename and change types and number of parameters
-    public static fragment1Home newInstance(String param1, String param2) {
-        fragment1Home fragment = new fragment1Home();
+    public static ExportGrades newInstance(String param1, String param2) {
+        ExportGrades fragment = new ExportGrades();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
-
-
-
         return fragment;
     }
 
@@ -66,22 +61,6 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        View view = inflater.inflate(R.layout.fragment_fragment1_home, container, false);
-        ImageView ScanAns = (ImageView) view.findViewById(R.id.btn_scanAnswers);
-        ScanAns.setOnClickListener(this);
-        return view;
-       // return inflater.inflate(R.layout.fragment_fragment1_home, container, false);
+        return inflater.inflate(R.layout.fragment_export_grades, container, false);
     }
-
-    @Override
-    public void onClick(View v) {
-        //Fragment ScanFrag = new Scan();
-        Intent intent = new Intent(getActivity(), CustomCamaraActivity.class);
-        startActivity(intent);
-     //   getFragmentManager().beginTransaction().replace(R.id.fragment_container,intent).commit();
-
-
-    }
-
 }

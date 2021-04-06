@@ -8,10 +8,13 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.database.CursorWindow;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.gp2021.BuildConfig;
@@ -41,24 +44,26 @@ public class InstructorHome extends AppCompatActivity implements ChipNavigationB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructor_home);
-        getSupportActionBar().hide();
+       getSupportActionBar().hide();
 
 
 
-
+/*
         constraintLayout = findViewById(R.id.instructorHome);
         // initializing animation drawable by getting background from constraint layout
         animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
         // setting enter fade animation duration to 3 seconds
         animationDrawable.setEnterFadeDuration(3000);
         // setting exit fade animation duration to 2 seconds
-        animationDrawable.setExitFadeDuration(2000);
+        animationDrawable.setExitFadeDuration(2000);*/
          navView = findViewById(R.id.bottom_navigation);
          navView.setOnItemSelectedListener(this);
       //  navView.setItemSelected(0,true);
 
-        
-        LoadFragment(new fragment1Home());
+
+
+       LoadFragment(new fragment1Home());
+
 
     }
 
@@ -116,15 +121,18 @@ private void LoadFragment(Fragment frag)
                          finish();
 
 */
+              //  fragment=new fragment1Home();
                 fragment=new fragment1Home();
                 break;
 
             case R.id.page_2: //Mail
                 // navView.setSelectedItemId(R.id.Cart);
                 Bundle extras2 = getIntent().getExtras();
+              //  fragment=new InstractorScan();
+
 
 //                GoogleSignInAccount account2 = (GoogleSignInAccount) extras2.get(EXTRA_MESSAGE);
-                fragment=new fragmentMail();
+               fragment=new fragmentMail();
                 break;
 
 

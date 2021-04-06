@@ -138,7 +138,7 @@ public class AcademicHome extends AppCompatActivity implements ChipNavigationBar
             case R.id.academic_page_3: //Export
                 // navView.setSelectedItemId(R.id.Cart);
 
-
+                fragment=new ExportGrades();
 
                // fragment=new fragmentEx();
                 break;

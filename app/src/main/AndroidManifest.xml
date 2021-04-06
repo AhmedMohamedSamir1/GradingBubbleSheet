@@ -3,23 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.gp2021">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -27,15 +31,18 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        tools:replace="android:icon"
-
-        android:theme="@style/Theme.GP2021">
-        <activity android:name=".ui.login.ForgetPassword"></activity>
+        android:theme="@style/Theme.GP2021"
+        tools:replace="android:icon">
+        <activity android:name=".ui.instructor.CreateExam"></activity>
+        <activity android:name=".ui.instructor.CustomCamaraActivity" />
+        <activity android:name=".ui.login.ForgetPassword" />
         <activity android:name=".ui.login.SignupActivity" />
         <activity android:name=".ui.instructor.Instructor_Mail" />
         <activity android:name=".ui.instructor.InstructorHome" />
         <activity android:name=".ui.academic.AcademicHome" />
-
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/app_name">
@@ -46,8 +53,12 @@
             </intent-filter>
         </activity>
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="ocr" />
     </application>
 
 </manifest>
