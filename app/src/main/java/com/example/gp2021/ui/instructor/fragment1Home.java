@@ -70,15 +70,31 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_fragment1_home, container, false);
         ImageView ScanAns = (ImageView) view.findViewById(R.id.btn_scanAnswers);
         ScanAns.setOnClickListener(this);
+        ImageView CreateExam = (ImageView) view.findViewById(R.id.btn_createQuiz);
+        CreateExam.setOnClickListener(this);
+
         return view;
        // return inflater.inflate(R.layout.fragment_fragment1_home, container, false);
     }
 
     @Override
     public void onClick(View v) {
+        Intent intent;
+        switch (v.getId())
+        {
+
+            case R.id.btn_scanAnswers:
+                 intent = new Intent(getActivity(), CustomCamaraActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_createQuiz:
+                intent = new Intent(getActivity(), CreateExam.class);
+                startActivity(intent);
+                break;
+
+        }
         //Fragment ScanFrag = new Scan();
-        Intent intent = new Intent(getActivity(), CustomCamaraActivity.class);
-        startActivity(intent);
+
      //   getFragmentManager().beginTransaction().replace(R.id.fragment_container,intent).commit();
 
 
