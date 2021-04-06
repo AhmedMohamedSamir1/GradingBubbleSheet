@@ -72,6 +72,10 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
         ScanAns.setOnClickListener(this);
         ImageView CreateExam = (ImageView) view.findViewById(R.id.btn_createQuiz);
         CreateExam.setOnClickListener(this);
+        ImageView AddAnswers = (ImageView) view.findViewById(R.id.btn_AddAnswers);
+        AddAnswers.setOnClickListener(this);
+        ImageView DeleteExam = (ImageView) view.findViewById(R.id.btnRemoveExam);
+        DeleteExam.setOnClickListener(this);
 
         return view;
        // return inflater.inflate(R.layout.fragment_fragment1_home, container, false);
@@ -89,6 +93,14 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
                 break;
             case R.id.btn_createQuiz:
                 intent = new Intent(getActivity(), CreateExam.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_AddAnswers:
+                intent = new Intent(getActivity(),AddAnswers.class);
+                startActivity(intent);
+                break;
+            case R.id.btnRemoveExam:
+                intent = new Intent(getActivity(),DeleteExam.class);
                 startActivity(intent);
                 break;
 

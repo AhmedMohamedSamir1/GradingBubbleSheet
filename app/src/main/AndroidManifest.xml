@@ -4,9 +4,6 @@
     package="com.example.gp2021">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -33,7 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GP2021"
         tools:replace="android:icon">
-        <activity android:name=".ui.instructor.CreateExam"></activity>
+        <activity android:name=".ui.instructor.DeleteExam"></activity>
+        <activity android:name=".ui.instructor.AddAnswers" />
+        <activity android:name=".ui.instructor.CreateExam" />
         <activity android:name=".ui.instructor.CustomCamaraActivity" />
         <activity android:name=".ui.login.ForgetPassword" />
         <activity android:name=".ui.login.SignupActivity" />
