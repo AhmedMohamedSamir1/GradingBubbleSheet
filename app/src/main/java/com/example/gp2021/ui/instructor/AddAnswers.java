@@ -182,9 +182,8 @@ String exam_ID = null;
                             databaseReference.child("exam_question").child(exam_ID).child(QestNum).setValue(EXAM_QUESTION).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful())
-                                    {
-                                        Toast.makeText(getApplicationContext(),"answer added successfully",Toast.LENGTH_LONG).show();
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getApplicationContext(), "answer added successfully", Toast.LENGTH_LONG).show();
 
                                     }
                                     else
