@@ -30,7 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GP2021"
         tools:replace="android:icon">
-        <activity android:name=".ui.instructor.DeleteExam"></activity>
+        <activity android:name=".ui.instructor.RemoveCategory"></activity>
+        <activity android:name=".ui.instructor.AddCategory" />
+        <activity android:name=".ui.instructor.DeleteExam" />
         <activity android:name=".ui.instructor.AddAnswers" />
         <activity android:name=".ui.instructor.CreateExam" />
         <activity android:name=".ui.instructor.CustomCamaraActivity" />
@@ -51,7 +53,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

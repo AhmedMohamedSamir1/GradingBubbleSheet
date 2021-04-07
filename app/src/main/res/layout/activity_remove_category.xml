@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.instructor.RemoveCategory">
+    <TextView
+        android:id="@+id/textView333"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Select category to delete"
+        android:textSize="24sp"
+        android:paddingTop="15sp"
+        app:fontFamily="@font/aclonica" />
+
+    <Spinner
+        android:layout_marginTop="25sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:id="@+id/Spinner_selectCategtodelete"
+        />
+    <com.royrodriguez.transitionbutton.TransitionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Category"
+        android:layout_marginTop="50sp"
+        android:paddingRight="20sp"
+        android:paddingLeft="20sp"
+        android:layout_gravity="center"
+        android:id="@+id/btnDeleteCategoryy"
+        />
+</LinearLayout>

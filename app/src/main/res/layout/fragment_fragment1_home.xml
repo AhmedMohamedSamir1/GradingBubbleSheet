@@ -96,7 +96,6 @@
                             app:srcCompat="@drawable/createquiz" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
-
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -104,29 +103,32 @@
                     android:layout_weight="1">
 
                     <RelativeLayout
+
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/textView4"
+                            android:id="@+id/textView9"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/btn_scanAnswers"
+                            android:layout_below="@id/btnRemoveExam"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="10dp"
-                            android:text="Scan Exam"
+                            android:text="Delete Exam"
                             android:textSize="24sp"
                             app:fontFamily="@font/aclonica" />
 
                         <ImageView
-                            android:id="@+id/btn_scanAnswers"
+
+                            android:id="@+id/btnRemoveExam"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="15dp"
-                            app:srcCompat="@drawable/scananswers" />
+                            app:srcCompat="@drawable/removee" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
+
             </LinearLayout>
 
             <LinearLayout
@@ -204,15 +206,15 @@
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
-
-            <LinearLayout
+ <LinearLayout
+                android:id="@+id/linearLayout22"
                 android:layout_width="0dp"
                 android:layout_height="175dp"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
                 <androidx.cardview.widget.CardView
@@ -227,24 +229,97 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/textView9"
+                            android:id="@+id/textView77"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/btnRemoveExam"
+                            android:layout_below="@id/btn_AddCategory"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="10dp"
-                            android:text="Delete Exam"
-                            android:textSize="24sp"
+                            android:text="Add Categ."
+                            android:textSize="21sp"
                             app:fontFamily="@font/aclonica" />
 
                         <ImageView
 
-                            android:id="@+id/btnRemoveExam"
+                            android:id="@+id/btn_AddCategory"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="15dp"
-                            app:srcCompat="@drawable/removee" />
+                            app:srcCompat="@drawable/addcat" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView66"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/btnDeleteCateg"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10dp"
+                            android:text="Delete Categ."
+                            android:textSize="24sp"
+                            app:fontFamily="@font/aclonica" />
+
+                        <ImageView
+                            android:id="@+id/btnDeleteCateg"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="15dp"
+                            app:srcCompat="@drawable/removecat" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="175dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout22">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/btn_scanAnswers"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10dp"
+                            android:text="Scan Exam"
+                            android:textSize="24sp"
+                            app:fontFamily="@font/aclonica" />
+
+                        <ImageView
+                            android:id="@+id/btn_scanAnswers"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="15dp"
+                            app:srcCompat="@drawable/scananswers" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
