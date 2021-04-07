@@ -133,7 +133,84 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
                 if (position > 0) {
                     Toast.makeText(CustomCamaraActivity.this, "You Select exam: " + SelectedExam, Toast.LENGTH_SHORT).show();
+                    //Hna Elmfrod arg3 egabat el exam wna m3aya Elname bta3o ello howa 3nd "position"  hgebo w a7to fe list
+                    // DatabaseReference Ref = FirebaseDatabase.getInstance().getReference().child("exam_question");
+                   // QuestAndAns.put(0,"A");
+                    //Start
+                    /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("exam");
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                String ExamName = ds.child("examName").getValue().toString();
+                                String ID=ds.child("examID").getValue().toString();
+                                // Toast.makeText(CustomCamaraActivity.this, "You Select exam: "+userType, Toast.LENGTH_SHORT).show();
+                                if(ExamName.equals(selectedItem))
+                                {
+
+                                    ExamID[0] =ID;
+
+                                   // Toast.makeText(CustomCamaraActivity.this, "examID: "+ ExamID[0]+" "+selectedItem, Toast.LENGTH_SHORT).show();
+                                    break;
+
+
+                                }
+
+                            }
+
+
+
+
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    //END
+
+
+
+
+                    //Start[]
+//                    DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("exam_question").child(ExamID[0]);
+                    DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("exam_question").child("1");
+
+                    databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                String QuesID = ds.child("questionID").getValue().toString();
+                                // Toast.makeText(CustomCamaraActivity.this, "You Select exam: "+userType, Toast.LENGTH_SHORT).show();
+                                String QuesAns = ds.child("questionAnswer").getValue().toString();
+                                QuestAndAns.put(QuesID, QuesAns);
+                            }
+
+
+
+
+
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    //END []
+
+
+                    Toast.makeText(CustomCamaraActivity.this, "AS", Toast.LENGTH_SHORT).show();
+
+
+*/
                     readData(QuestAndAns -> {
                            // MyQuestAndAns.putAll(QuestAndAns);
                            Toast.makeText(getApplicationContext(),QuestAndAns.get("1"),Toast.LENGTH_LONG).show();

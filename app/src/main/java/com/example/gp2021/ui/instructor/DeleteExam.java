@@ -11,6 +11,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
+import com.example.gp2021.data.model.exam;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +28,7 @@ import java.util.List;
 public class DeleteExam extends AppCompatActivity {
     Spinner SpinnerExam;
     DatabaseReference databaseReference;
+    String exam_ID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +90,6 @@ public class DeleteExam extends AppCompatActivity {
 
 
 
-
                 }
 
 
@@ -108,6 +111,39 @@ public class DeleteExam extends AppCompatActivity {
                 {
 
                     // [2] Write Code HERE !
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                    databaseReference.child("exam").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                                String examID = ds.child("examID").getValue().toString();
+                                String examName = ds.child("examName").getValue().toString();
+                                String examDate = ds.child("examDate").getValue().toString();
+                                String examGrade = ds.child("examGrade").getValue().toString();
+                                String userID = ds.child("userID").getValue().toString();
+                                exam EXAM = new exam(examID, examName, examDate, examGrade, userID);
+                                if(EXAM.getExamName().equals(ExamName))
+                                {
+                                    exam_ID = EXAM.getExamID();
+                                    databaseReference.child("exam").child(exam_ID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(getApplicationContext(), "exam removed successfully",Toast.LENGTH_SHORT).show();
+                                            databaseReference.child("exam_question").child(exam_ID).removeValue();
+                                        }
+                                    });
+                                    break;
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
 
                 }
                 else

@@ -18,6 +18,7 @@ public class exam {
         this.examDate = examDate;
         this.examGrade = examGrade;
         this.userID = userID;
+
     }
 
     public String getExamID() {
@@ -59,4 +60,6 @@ public class exam {
     public void setUserID(String userID) {
         this.userID = userID;
     }
+
+
 }

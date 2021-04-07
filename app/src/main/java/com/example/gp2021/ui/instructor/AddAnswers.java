@@ -12,6 +12,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
+import com.example.gp2021.data.model.exam;
+import com.example.gp2021.data.model.exam_question;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +34,7 @@ Spinner SpinnerQuestion;
 
 Spinner SpinnerAnswer;
 String SelectedExam;
+String exam_ID = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,17 +134,70 @@ String SelectedExam;
             }
         });
         TransitionButton Submit=findViewById(R.id.Add);
+
         Submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String QestNum=SpinnerQuestion.getSelectedItem().toString();
                 String QestAns=SpinnerAnswer.getSelectedItem().toString();
                 String ExamName=SpinnerExam.getSelectedItem().toString();
+                String catID = "1";
+                String QuesGrade = "2";
 
                 if(SpinnerExam.getSelectedItemPosition()!=0&&SpinnerAnswer.getSelectedItemPosition()!=0&&SpinnerQuestion.getSelectedItemPosition()!=0)
                 {
-                    
                 // [1] Write Code HERE !
+
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                    databaseReference.child("exam").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                              //  exam EXAM = ds.getValue(exam.class);
+                                String examID = ds.child("examID").getValue().toString();
+                                String examName = ds.child("examName").getValue().toString();
+                                String examDate = ds.child("examDate").getValue().toString();
+                                String examGrade = ds.child("examGrade").getValue().toString();
+                                String userID = ds.child("userID").getValue().toString();
+                              exam EXAM = new exam(examID, examName, examDate, examGrade, userID);
+                                if(EXAM.getExamName().equals(ExamName))
+                                {
+                                    exam_ID = EXAM.getExamID();
+                                    break;
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    //--
+                    databaseReference.child("exam_question").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            exam_question EXAM_QUESTION = new exam_question(catID, exam_ID,QestAns,QuesGrade,QestNum);
+
+                            databaseReference.child("exam_question").child(exam_ID).child(QestNum).setValue(EXAM_QUESTION).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful())
+                                    {
+                                        Toast.makeText(getApplicationContext(),"answer added successfully",Toast.LENGTH_LONG).show();
+
+                                    }
+                                    else
+                                        Toast.makeText(getApplicationContext(),"Network Error",Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
 
 
                 }
@@ -173,7 +231,6 @@ String SelectedExam;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String ExamName = ds.child("examName").getValue().toString();
                     String ID = ds.child("examID").getValue().toString();
-
 
                 }
 
