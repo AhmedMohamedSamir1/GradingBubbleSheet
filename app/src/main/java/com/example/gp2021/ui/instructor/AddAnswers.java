@@ -28,13 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AddAnswers extends AppCompatActivity {
-Spinner SpinnerExam;
-Spinner SpinnerQuestion;
+    Spinner SpinnerExam;
+    Spinner SpinnerQuestion;
     DatabaseReference databaseReference;
 
-Spinner SpinnerAnswer;
-String SelectedExam;
-String exam_ID = null;
+    Spinner SpinnerAnswer;
+    String SelectedExam;
+    String exam_ID = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +107,7 @@ String exam_ID = null;
                     SpinnerQuestion.setAdapter(areasAdapter2);
                     //ListViewExams.setPrompt("Select your Exam");
                     SpinnerQuestion.setSelection(0, false);
-                     tmp = new ArrayList<>();
+                    tmp = new ArrayList<>();
                     tmp.add("Tap here to select");
                     tmp.add("A");
                     tmp.add("B");
@@ -146,20 +146,20 @@ String exam_ID = null;
 
                 if(SpinnerExam.getSelectedItemPosition()!=0&&SpinnerAnswer.getSelectedItemPosition()!=0&&SpinnerQuestion.getSelectedItemPosition()!=0)
                 {
-                // [1] Write Code HERE !
+                    // [1] Write Code HERE !
 
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
                     databaseReference.child("exam").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                              //  exam EXAM = ds.getValue(exam.class);
+                                //  exam EXAM = ds.getValue(exam.class);
                                 String examID = ds.child("examID").getValue().toString();
                                 String examName = ds.child("examName").getValue().toString();
                                 String examDate = ds.child("examDate").getValue().toString();
                                 String examGrade = ds.child("examGrade").getValue().toString();
                                 String userID = ds.child("userID").getValue().toString();
-                              exam EXAM = new exam(examID, examName, examDate, examGrade, userID);
+                                exam EXAM = new exam(examID, examName, examDate, examGrade, userID);
                                 if(EXAM.getExamName().equals(ExamName))
                                 {
                                     exam_ID = EXAM.getExamID();
@@ -245,4 +245,4 @@ String exam_ID = null;
 
     }
 
-    }
+}

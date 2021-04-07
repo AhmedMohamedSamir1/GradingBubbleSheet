@@ -29,6 +29,8 @@ public class DeleteExam extends AppCompatActivity {
     Spinner SpinnerExam;
     DatabaseReference databaseReference;
     String exam_ID;
+    ArrayAdapter<String> areasAdapter;
+    List<String > are;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,7 @@ public class DeleteExam extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<String > are = new ArrayList<>();
+                 are = new ArrayList<>();
                 are.add("Select your exam to delete");
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String ExamName = ds.child("examName").getValue().toString();
@@ -54,7 +56,7 @@ public class DeleteExam extends AppCompatActivity {
 
                 }
 
-                ArrayAdapter<String> areasAdapter = new ArrayAdapter<String> (DeleteExam.this, android.R.layout.simple_spinner_item,  are);
+                areasAdapter = new ArrayAdapter<String> (DeleteExam.this, android.R.layout.simple_spinner_item,  are);
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 // areasAdapter.add("Select your Exam"); //This is the text that will be displayed as hint.
                 SpinnerExam.setAdapter(areasAdapter);
@@ -129,6 +131,10 @@ public class DeleteExam extends AppCompatActivity {
                                     databaseReference.child("exam").child(exam_ID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
+
+                                            are.remove(SpinnerExam.getSelectedItemPosition());
+                                            SpinnerExam.setSelection(0,false);
+                                            areasAdapter.notifyDataSetChanged();
                                             Toast.makeText(getApplicationContext(), "exam removed successfully",Toast.LENGTH_SHORT).show();
                                             databaseReference.child("exam_question").child(exam_ID).removeValue();
                                         }
