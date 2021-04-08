@@ -11,7 +11,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
+import com.example.gp2021.data.model.category;
 import com.example.gp2021.data.model.exam;
+import com.example.gp2021.data.model.exam_question;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +31,7 @@ public class RemoveCategory extends AppCompatActivity {
     Spinner SpinnerCateg;
     DatabaseReference databaseReference;
     String catID;
+    String cat_ID;
     ArrayAdapter<String> areasAdapter;
     List<String > are;
     @Override
@@ -110,14 +113,57 @@ public class RemoveCategory extends AppCompatActivity {
                 {
 
                     // [3] Write Code HERE !
+                    //-------------
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                    databaseReference.child("category").addListenerForSingleValueEvent(new ValueEventListener()     {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
+                                category CAT =   ds.getValue(category.class);
+                                if(CAT.getCatName().equals(CatNameSelected))
+                                {
+                                     catID = CAT.getCatID();
+                                  //  cat_ID =  new String(CAT.getCatID());
+                                    databaseReference.child("category").child(catID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(getApplicationContext(), CAT.getCatName()+" deleted successfully",Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    break;
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                    });
+                    //-----------------------------------------------------------------------------------
+       //the code in this part is to delete the questions that has catID of removed category but it doesn't work why because catID become null and we can't understand why
+       // وجربنا برده نحط القيمة بتاعت ال catID جوه ال cat_ID برده ال cat_ID بتبقى ب null
+                  //  Toast.makeText(getApplicationContext(), "the cat = "+ catID ,Toast.LENGTH_LONG).show();
+                   // databaseReference.child("exam_question").addListenerForSingleValueEvent(new ValueEventListener() {
+                    //    @Override
+                    //    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                     //       Toast.makeText(getApplicationContext(), "hello1" ,Toast.LENGTH_LONG).show();
+                     //       for(DataSnapshot DS : snapshot.getChildren())
+                      //      {
+                      //          exam_question  examQuestion = DS.getValue(exam_question.class);
+                      //          Toast.makeText(getApplicationContext(), examQuestion.getCatID() ,Toast.LENGTH_LONG).show();
+                      //          if(examQuestion.getCatID().equals(catID))
+                      //          {
+                      //              Toast.makeText(getApplicationContext(), "hello3" ,Toast.LENGTH_LONG).show();
+                      //              databaseReference.child("exam_question").child(examQuestion.getExamID()).child(examQuestion.getQuestionID()).removeValue();
+                      //          }
+                       //     }
+                       // }
 
+                      //  @Override
+                      //  public void onCancelled(@NonNull DatabaseError error) {
 
-
-
-
-
-
+                      //  }
+                    //});
+                    //---------------------------------------------------------------------------------------------
 
 
                     are.remove(SpinnerCateg.getSelectedItemPosition());
