@@ -34,6 +34,92 @@
          >
 
         </Spinner>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/square1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="15sp"
+        android:src="@drawable/square">
+
+    </ImageView>
+    <ImageView
+        android:id="@+id/square2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="350sp"
+        android:src="@drawable/square">
+
+    </ImageView>
+
+
+</RelativeLayout>
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/square3"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="150sp"
+
+        android:layout_marginStart="15sp"
+        android:src="@drawable/square">
+
+    </ImageView>
+    <ImageView
+        android:id="@+id/square4"
+        android:layout_width="50dp"
+        android:layout_marginTop="150sp"
+
+        android:layout_height="50dp"
+        android:layout_marginStart="350sp"
+        android:src="@drawable/square">
+
+    </ImageView>
+
+
+</RelativeLayout>
+
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/square5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="150sp"
+
+        android:layout_marginStart="15sp"
+        android:src="@drawable/square">
+
+    </ImageView>
+    <ImageView
+        android:id="@+id/square6"
+        android:layout_width="50dp"
+        android:layout_marginTop="150sp"
+
+        android:layout_height="50dp"
+        android:layout_marginStart="350sp"
+        android:src="@drawable/square">
+
+    </ImageView>
+
+
+</RelativeLayout>
+
+
+
     </LinearLayout>
 
         <TextView
