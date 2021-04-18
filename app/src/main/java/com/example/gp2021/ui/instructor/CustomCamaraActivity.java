@@ -16,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.ContextThemeWrapper;
@@ -31,6 +32,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.gp2021.R;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -43,8 +54,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.royrodriguez.transitionbutton.TransitionButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,11 +68,11 @@ import java.util.List;
 
 public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHolder.Callback,
         View.OnClickListener {
-   public String SelectedExam;
+    public String SelectedExam;
     Spinner ExamsSpinner;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    ArrayList<String> arrayList ;
+    ArrayList<String> arrayList;
     ArrayAdapter<String> arrayAdapter;
     private Context context;
     private SurfaceView surfaceView;
@@ -81,11 +97,12 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     private static final String TAG = "FOTOGRAFIA";
     private int Height = 620, Width = 480;
     private TextRecognizer recognizer;
-  public   String[] ExamID;
+    public String[] ExamID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ExamID=new String[1];
+        ExamID = new String[1];
         setContentView(R.layout.activity_custom_camara);
         context = this;
         arrayList = new ArrayList<>();
@@ -99,18 +116,18 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<String > are = new ArrayList<>();
+                List<String> are = new ArrayList<>();
                 are.add("Select your exam's answer");
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String ExamName = ds.child("examName").getValue().toString();
-                   // Toast.makeText(CustomCamaraActivity.this, "You Select exam: "+userType, Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(CustomCamaraActivity.this, "You Select exam: "+userType, Toast.LENGTH_SHORT).show();
                     are.add(ExamName);
 
                 }
 
-                ArrayAdapter<String> areasAdapter = new ArrayAdapter<String> (CustomCamaraActivity.this, android.R.layout.simple_spinner_item,  are);
+                ArrayAdapter<String> areasAdapter = new ArrayAdapter<String>(CustomCamaraActivity.this, android.R.layout.simple_spinner_item, are);
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-               // areasAdapter.add("Select your Exam"); //This is the text that will be displayed as hint.
+                // areasAdapter.add("Select your Exam"); //This is the text that will be displayed as hint.
                 ExamsSpinner.setAdapter(areasAdapter);
                 //ListViewExams.setPrompt("Select your Exam");
                 ExamsSpinner.setSelection(0, false);
@@ -129,13 +146,13 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
         ExamsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                 SelectedExam = ExamsSpinner.getSelectedItem().toString();
+                SelectedExam = ExamsSpinner.getSelectedItem().toString();
 
                 if (position > 0) {
                     Toast.makeText(CustomCamaraActivity.this, "You Select exam: " + SelectedExam, Toast.LENGTH_SHORT).show();
                     //Hna Elmfrod arg3 egabat el exam wna m3aya Elname bta3o ello howa 3nd "position"  hgebo w a7to fe list
                     // DatabaseReference Ref = FirebaseDatabase.getInstance().getReference().child("exam_question");
-                   // QuestAndAns.put(0,"A");
+                    // QuestAndAns.put(0,"A");
                     //Start
                     /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("exam");
                     databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -212,14 +229,14 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 */
                     readData(QuestAndAns -> {
-                           // MyQuestAndAns.putAll(QuestAndAns);
-                           Toast.makeText(getApplicationContext(),QuestAndAns.get("1"),Toast.LENGTH_LONG).show();
+                        // MyQuestAndAns.putAll(QuestAndAns);
+                        Toast.makeText(getApplicationContext(), QuestAndAns.get("1"), Toast.LENGTH_LONG).show();
 
-                            //KML HnA
+                        //KML HnA
 
 
                     });
-                  //  Toast.makeText(getApplicationContext(),QuestAndAns.get("1"),Toast.LENGTH_LONG).show();
+                    //  Toast.makeText(getApplicationContext(),QuestAndAns.get("1"),Toast.LENGTH_LONG).show();
 
                 }
 
@@ -281,7 +298,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
-                    if(cameraSource != null){
+                    if (cameraSource != null) {
                         cameraSource.stop();
                     }
                 }
@@ -303,7 +320,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                         }
                         final String read = builder.toString().trim();
                         //String read = builder.toString().trim().replace(" ", "").replace("\n", "");
-                        try{
+                        try {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -322,13 +339,11 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                                         String StudID = "Waiting";
                                         String[] All = Detected.split(" ");
                                         //  mTextView.setText("Waiting ...");
-                                        for (int k = 0; k < All.length; k++)
-                                        {
-                                            if(All[k].equals("ID"))
-                                            {
-                                                StudID=All[k+1];
+                                        for (int k = 0; k < All.length; k++) {
+                                            if (All[k].equals("ID")) {
+                                                StudID = All[k + 1];
                                                 StudID = stripNonDigits(StudID);
-                                                txTextoCapturado.setText("ID :" +StudID);
+                                                txTextoCapturado.setText("ID :" + StudID);
 
                                                 break;
                                             }
@@ -336,17 +351,16 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
                                         //  mTextView.setText(stringBuilder.toString());
 
-                                    } else
-                                    {
+                                    } else {
                                         txTextoCapturado.setText("Waiting");
                                     }
 
 
-                                   // txTextoCapturado.setText(read);
+                                    // txTextoCapturado.setText(read);
                                 }
                             });
-                        }catch (Exception ex){
-                            Log.e("error","Error al actualizar texto OCR");
+                        } catch (Exception ex) {
+                            Log.e("error", "Error al actualizar texto OCR");
                         }
 
                         //It continues doing other things here
@@ -399,7 +413,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(camera != null){
+        if (camera != null) {
             camera.setPreviewCallback(null);
             camera.setErrorCallback(null);
             camera.stopPreview();
@@ -482,7 +496,6 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
         Camera.Parameters params = c.getParameters();
 
 
-
         List<String> focusModes = params.getSupportedFlashModes();
         if (focusModes != null) {
             if (focusModes
@@ -493,7 +506,6 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
         params.setRotation(rotation);
     }
-
 
 
     private void releaseCamera() {
@@ -552,7 +564,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     }
 
     private void takeImage() {
-        try{
+        try {
             //openCamera(CameraInfo.CAMERA_FACING_BACK);
             //releaseCameraSource();
             //releaseCamera();
@@ -562,6 +574,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
             cameraSource.takePicture(null, new CameraSource.PictureCallback() {
 
                 private File imageFile;
+
                 @Override
                 public void onPictureTaken(byte[] bytes) {
                     try {
@@ -572,31 +585,102 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                         Bitmap rotatedBitmap = null;
                         loadedImage = BitmapFactory.decodeByteArray(bytes, 0,
                                 bytes.length);
-
-                        // rotate Image
                         Matrix rotateMatrix = new Matrix();
                         rotateMatrix.postRotate(rotation);
                         rotatedBitmap = Bitmap.createBitmap(loadedImage, 0, 0,
                                 loadedImage.getWidth(), loadedImage.getHeight(),
                                 rotateMatrix, false);
-                        ImageView im=findViewById(R.id.dfs);
-                     //   im.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.length));
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); // bm is the bitmap object
+                        byte[] b = baos.toByteArray();
+                        String encodedImage2 = Base64.encodeToString(b, Base64.DEFAULT);
+                        ImageView im = findViewById(R.id.dfs);
+                        //   im.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.length));
                         im.setImageBitmap(rotatedBitmap);
-
-                        BtnCapturarSheet.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, new TransitionButton.OnAnimationStopEndListener() {
-                            @Override
-                            public void onAnimationStopEnd() {
-                                //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
+                        try {
+                            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                            String URL = "http://192.168.1.104:64839/Process";
+                            /*String URL = "http://uramitsys-001-site3.htempurl.com/Process";*/
+                            JSONObject jsonBody = new JSONObject();
+                            jsonBody.put("ID", "10");
+                            JSONObject jsonBodyImages = new JSONObject();
+                            jsonBodyImages.put("Answares", "0,1,1,2,0,3,2,1,2,2");
+                            jsonBodyImages.put("Base64", encodedImage2);
+                            jsonBody.put("Images", jsonBodyImages);
+                            final String requestBody = jsonBody.toString();
+                            String dd55="";
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    Log.i("VOLLEY", response);
+                                    BtnCapturarSheet.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, new TransitionButton.OnAnimationStopEndListener() {
+                                        @Override
+                                        public void onAnimationStopEnd() {
+                                            //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
 
                                   /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                     startActivity(intent);*/
-                                //HEEEEEEEEEEEEEEEEEEEEERE
-                                String Grade="S";
-                        BtnCapturarSheet.setText("Grade : "+Grade);
+                                            //HEEEEEEEEEEEEEEEEEEEEERE
+                                            String Grade = response;
+                                            BtnCapturarSheet.setText("Grade : " + Grade);
 
-                            }
-                        });
+                                        }
+                                    });
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("VOLLEY", error.toString());
+                                    BtnCapturarSheet.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, new TransitionButton.OnAnimationStopEndListener() {
+                                        @Override
+                                        public void onAnimationStopEnd() {
+                                            //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
+
+                                  /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                    startActivity(intent);*/
+                                            //HEEEEEEEEEEEEEEEEEEEEERE
+                                            String Grade = "ERROR";
+                                            BtnCapturarSheet.setText(Grade);
+
+                                        }
+                                    });
+                                }
+                            }) {
+                                @Override
+                                public String getBodyContentType() {
+                                    return "application/json; charset=utf-8";
+                                }
+
+                                @Override
+                                public byte[] getBody() throws AuthFailureError {
+                                    try {
+                                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                                    } catch (UnsupportedEncodingException uee) {
+                                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                                        return null;
+                                    }
+                                }
+
+                                @Override
+                                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                                    String responseString = "";
+                                    if (response != null) {
+                                        responseString = String.valueOf(response.statusCode);
+                                        // can get more details such as response.headers
+                                    }
+                                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                                }
+                            };
+                            requestQueue.add(stringRequest);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        // rotate Image
+
+
+
 
 
                     } catch (Exception e) {
@@ -605,7 +689,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                 }
             });
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             txTextoCapturado.setText("Error al capturar fotografia!");
         }
 
@@ -620,7 +704,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     }
 
     private void alertCameraDialog() {
-        AlertDialog.Builder dialog = createAlert(CustomCamaraActivity.this,"Camera info", "error to open camera");
+        AlertDialog.Builder dialog = createAlert(CustomCamaraActivity.this, "Camera info", "error to open camera");
         dialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -647,7 +731,6 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
         return dialog;
 
     }
-
 
 
     /**
@@ -680,32 +763,27 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     }
 
     public static String stripNonDigits(
-            final CharSequence input /* inspired by seh's comment */){
+            final CharSequence input /* inspired by seh's comment */) {
         final StringBuilder sb = new StringBuilder(
                 input.length() /* also inspired by seh's comment */);
-        for(int i = 0; i < input.length(); i++){
+        for (int i = 0; i < input.length(); i++) {
             final char c = input.charAt(i);
-            if(c > 47 && c < 58){
+            if (c > 47 && c < 58) {
                 sb.append(c);
             }
-            if(c=='o'||c=='O')
-            {
+            if (c == 'o' || c == 'O') {
                 sb.append('0');
             }
-            if(c=='i'||c=='l'||c=='I')
-            {
+            if (c == 'i' || c == 'l' || c == 'I') {
                 sb.append('1');
             }
-            if(c=='s'||c=='S')
-            {
+            if (c == 's' || c == 'S') {
                 sb.append('5');
             }
-            if(c=='g')
-            {
+            if (c == 'g') {
                 sb.append('9');
             }
-            if(c=='z')
-            {
+            if (c == 'z') {
                 sb.append('2');
             }
         }
@@ -714,12 +792,10 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
     public interface MyCallback {
-        void onCallback( HashMap<String, String> QuestAndAns);
+        void onCallback(HashMap<String, String> QuestAndAns);
     }
 
     public void readData(MyCallback myCallback) {
-
-
 
 
         //databaseReference = FirebaseDatabase.getInstance().getReference().child("exam");
@@ -729,17 +805,11 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String ExamName = ds.child("examName").getValue().toString();
-                    String ID=ds.child("examID").getValue().toString();
+                    String ID = ds.child("examID").getValue().toString();
                     // Toast.makeText(CustomCamaraActivity.this, "You Select exam: "+userType, Toast.LENGTH_SHORT).show();
-                    if(ExamName.equals(SelectedExam))
-                    {
+                    if (ExamName.equals(SelectedExam)) {
 
-                        ExamID[0] =ID;
-
-
-
-
-
+                        ExamID[0] = ID;
 
 
                         databaseReference.child(String.format("exam_question")).child(ExamID[0]).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -748,7 +818,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                                 //String value = dataSnapshot.getValue(String.class);
 
                                 for (DataSnapshot dss : dataSnapshot.getChildren()) {
-                                  //  Toast.makeText(CustomCamaraActivity.this, "examID KEL: "+ ExamID[0]+" "+SelectedExam, Toast.LENGTH_SHORT).show();
+                                    //  Toast.makeText(CustomCamaraActivity.this, "examID KEL: "+ ExamID[0]+" "+SelectedExam, Toast.LENGTH_SHORT).show();
 
                                     String QuesID = dss.child("questionID").getValue().toString(); //rkm elexam,rkm elso2al
                                     String QuesAns = dss.child("questionAnswer").getValue().toString();
@@ -762,11 +832,9 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                             }
 
                             @Override
-                            public void onCancelled(DatabaseError databaseError) {}
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
                         });
-
-
-
 
 
                         break;
@@ -775,10 +843,6 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                     }
 
                 }
-
-
-
-
 
 
             }
@@ -790,18 +854,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
         });
 
 
-
-
-
-
-
-
-
-
-
-
     }
-
 
 
 }
