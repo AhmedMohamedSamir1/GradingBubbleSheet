@@ -599,8 +599,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                         im.setImageBitmap(rotatedBitmap);
                         try {
                             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-                            String URL = "http://192.168.1.104:64839/Process";
-                            /*String URL = "http://uramitsys-001-site3.htempurl.com/Process";*/
+                            /*String URL = "http://192.168.1.104:64839/Process";*/
+                            String URL = "http://uramitsys-001-site3.htempurl.com/Process";
                             JSONObject jsonBody = new JSONObject();
                             jsonBody.put("ID", "10");
                             JSONObject jsonBodyImages = new JSONObject();
