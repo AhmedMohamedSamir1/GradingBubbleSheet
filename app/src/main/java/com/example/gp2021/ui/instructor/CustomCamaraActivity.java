@@ -604,7 +604,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                             JSONObject jsonBody = new JSONObject();
                             jsonBody.put("ID", "10");
                             JSONObject jsonBodyImages = new JSONObject();
-                            jsonBodyImages.put("Answares", "0,1,1,2,0,3,2,1,2,2");
+                            jsonBodyImages.put("Answares", "1,2,1,2,0,3,2,1,2,2");
                             jsonBodyImages.put("Base64", encodedImage2);
                             jsonBody.put("Images", jsonBodyImages);
                             final String requestBody = jsonBody.toString();
