@@ -10,11 +10,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -27,6 +29,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -53,6 +56,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.royrodriguez.transitionbutton.TransitionButton;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +64,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,6 +81,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     ArrayAdapter<String> arrayAdapter;
     private Context context;
     private SurfaceView surfaceView;
+    private Button btnLoadFromGallary;
     private SurfaceHolder surfaceHolder;
     private Camera camera;
     private TransitionButton BtnCapturarSheet;
@@ -98,6 +104,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     private int Height = 620, Width = 480;
     private TextRecognizer recognizer;
     public String[] ExamID;
+   public final int SELECT_PICTURE=142;
+   public  ImageView im;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,9 +117,9 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-
+        btnLoadFromGallary=findViewById(R.id.loadImageFromGallary);
         ExamsSpinner = (Spinner) findViewById(R.id.ListOfExams);
-
+       im = findViewById(R.id.dfs);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("exam");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -245,6 +253,15 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        btnLoadFromGallary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                pickImage();
+
 
             }
         });
@@ -583,18 +600,15 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                         // convert byte array into bitmap
                         Bitmap loadedImage = null;
                         Bitmap rotatedBitmap = null;
-                        loadedImage = BitmapFactory.decodeByteArray(bytes, 0,
-                                bytes.length);
+                        loadedImage = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
                         Matrix rotateMatrix = new Matrix();
                         rotateMatrix.postRotate(rotation);
-                        rotatedBitmap = Bitmap.createBitmap(loadedImage, 0, 0,
-                                loadedImage.getWidth(), loadedImage.getHeight(),
-                                rotateMatrix, false);
+                        rotatedBitmap = Bitmap.createBitmap(loadedImage, 0, 0,loadedImage.getWidth(), loadedImage.getHeight(),rotateMatrix, false);
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); // bm is the bitmap object
                         byte[] b = baos.toByteArray();
                         String encodedImage2 = Base64.encodeToString(b, Base64.DEFAULT);
-                        ImageView im = findViewById(R.id.dfs);
+
                         //   im.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.length));
                         im.setImageBitmap(rotatedBitmap);
                         try {
@@ -855,6 +869,213 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
     }
+    public void pickImage() {
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+
+                //Get ImageURi and load with help of picasso
+                //Uri selectedImageURI = data.getData();
+                Uri selectedImageURI = data.getData();
+                im.setImageURI(null);
+                im.setImageURI(selectedImageURI);
+                try {
+                    byte[] bytes=getBytes(getApplicationContext(),selectedImageURI);
+
+                    serVerRamy(bytes);
 
 
+
+
+
+
+
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+        }
+    }
+    public void serVerRamy(byte[] bytes)
+    {
+
+            //openCamera(CameraInfo.CAMERA_FACING_BACK);
+            //releaseCameraSource();
+            //releaseCamera();
+            //openCamera(CameraInfo.CAMERA_FACING_BACK);
+            //setUpCamera(camera);
+            //Thread.sleep(1000);
+
+
+                File imageFile;
+
+
+                    try {
+                        BtnCapturarSheet.startAnimation();
+
+                        // convert byte array into bitmap
+                        Bitmap loadedImage = null;
+                        Bitmap rotatedBitmap = null;
+                        loadedImage = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+                        Matrix rotateMatrix = new Matrix();
+                        rotateMatrix.postRotate(rotation);
+                        rotatedBitmap = Bitmap.createBitmap(loadedImage, 0, 0,loadedImage.getWidth(), loadedImage.getHeight(),rotateMatrix, false);
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); // bm is the bitmap object
+                        byte[] b = baos.toByteArray();
+                        String encodedImage2 = Base64.encodeToString(b, Base64.DEFAULT);
+
+                        //   im.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.length));
+                        im.setImageBitmap(rotatedBitmap);
+                        try {
+                            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                            /*String URL = "http://192.168.1.104:64839/Process";*/
+                            String URL = "http://uramitsys-001-site3.htempurl.com/Process";
+                            JSONObject jsonBody = new JSONObject();
+                            jsonBody.put("ID", "10");
+                            JSONObject jsonBodyImages = new JSONObject();
+                            jsonBodyImages.put("Answares", "1,2,1,2,0,3,2,1,2,2");
+                            jsonBodyImages.put("Base64", encodedImage2);
+                            jsonBody.put("Images", jsonBodyImages);
+                            final String requestBody = jsonBody.toString();
+                            String dd55="";
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    Log.i("VOLLEY", response);
+                                    BtnCapturarSheet.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, new TransitionButton.OnAnimationStopEndListener() {
+                                        @Override
+                                        public void onAnimationStopEnd() {
+                                            //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
+
+                                  /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                    startActivity(intent);*/
+                                            //HEEEEEEEEEEEEEEEEEEEEERE
+                                            String Grade = response;
+                                            BtnCapturarSheet.setText("Grade : " + Grade);
+
+                                        }
+                                    });
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("VOLLEY", error.toString());
+                                    BtnCapturarSheet.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, new TransitionButton.OnAnimationStopEndListener() {
+                                        @Override
+                                        public void onAnimationStopEnd() {
+                                            //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
+
+                                  /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                    startActivity(intent);*/
+                                            //HEEEEEEEEEEEEEEEEEEEEERE
+                                            String Grade = "ERROR";
+                                            BtnCapturarSheet.setText(Grade);
+
+                                        }
+                                    });
+                                }
+                            }) {
+                                @Override
+                                public String getBodyContentType() {
+                                    return "application/json; charset=utf-8";
+                                }
+
+                                @Override
+                                public byte[] getBody() throws AuthFailureError {
+                                    try {
+                                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                                    } catch (UnsupportedEncodingException uee) {
+                                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                                        return null;
+                                    }
+                                }
+
+                                @Override
+                                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                                    String responseString = "";
+                                    if (response != null) {
+                                        responseString = String.valueOf(response.statusCode);
+                                        // can get more details such as response.headers
+                                    }
+                                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                                }
+                            };
+                            requestQueue.add(stringRequest);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        // rotate Image
+
+
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+
+
+
+
+
+
+    }
+    public static byte[] getBytes(Context context, Uri uri) throws IOException {
+        InputStream iStream = context.getContentResolver().openInputStream(uri);
+        try {
+            return getBytes(iStream);
+        } finally {
+            // close the stream
+            try {
+                iStream.close();
+            } catch (IOException ignored) { /* do nothing */ }
+        }
+    }
+
+
+
+    /**
+     * get bytes from input stream.
+     *
+     * @param inputStream inputStream.
+     * @return byte array read from the inputStream.
+     * @throws IOException
+     */
+    public static byte[] getBytes(InputStream inputStream) throws IOException {
+
+        byte[] bytesResult = null;
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+        try {
+            int len;
+            while ((len = inputStream.read(buffer)) != -1) {
+                byteBuffer.write(buffer, 0, len);
+            }
+            bytesResult = byteBuffer.toByteArray();
+        } finally {
+            // close the stream
+            try{ byteBuffer.close(); } catch (IOException ignored){ /* do nothing */ }
+        }
+        return bytesResult;
+    }
 }
