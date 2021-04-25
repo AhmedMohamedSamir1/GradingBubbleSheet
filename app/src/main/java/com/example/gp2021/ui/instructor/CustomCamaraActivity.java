@@ -1,5 +1,13 @@
 package com.example.gp2021.ui.instructor;
 
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+
+import static com.example.gp2021.ui.instructor.Util.getSource;
+
+import static com.example.gp2021.ui.instructor.Util.sout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +54,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.gp2021.R;
+import com.example.gp2021.ui.login.SignupActivity;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
@@ -412,7 +421,11 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
     @Override
     protected void onResume() {
+
         super.onResume();
+
+
+
     }
 
     @Override
@@ -573,13 +586,21 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
             case R.id.btnCapturarSheet:
                 takeImage();
+
+
                 break;
 
             default:
                 break;
         }
     }
+private void Grading(Bitmap rotatedBitmap)
+{
 
+
+
+
+}
     private void takeImage() {
         try {
             //openCamera(CameraInfo.CAMERA_FACING_BACK);
@@ -611,86 +632,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
                         //   im.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.length));
                         im.setImageBitmap(rotatedBitmap);
-                        try {
-                            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-                            /*String URL = "http://192.168.1.104:64839/Process";*/
-                            String URL = "http://uramitsys-001-site3.htempurl.com/Process";
-                            JSONObject jsonBody = new JSONObject();
-                            jsonBody.put("ID", "10");
-                            JSONObject jsonBodyImages = new JSONObject();
-                            jsonBodyImages.put("Answares", "1,2,1,2,0,3,2,1,2,2");
-                            jsonBodyImages.put("Base64", encodedImage2);
-                            jsonBody.put("Images", jsonBodyImages);
-                            final String requestBody = jsonBody.toString();
-                            String dd55="";
-                            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    Log.i("VOLLEY", response);
-                                    BtnCapturarSheet.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, new TransitionButton.OnAnimationStopEndListener() {
-                                        @Override
-                                        public void onAnimationStopEnd() {
-                                            //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
 
-                                  /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                    startActivity(intent);*/
-                                            //HEEEEEEEEEEEEEEEEEEEEERE
-                                            String Grade = response;
-                                            BtnCapturarSheet.setText("Grade : " + Grade);
 
-                                        }
-                                    });
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.e("VOLLEY", error.toString());
-                                    BtnCapturarSheet.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, new TransitionButton.OnAnimationStopEndListener() {
-                                        @Override
-                                        public void onAnimationStopEnd() {
-                                            //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
-
-                                  /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                    startActivity(intent);*/
-                                            //HEEEEEEEEEEEEEEEEEEEEERE
-                                            String Grade = "ERROR";
-                                            BtnCapturarSheet.setText(Grade);
-
-                                        }
-                                    });
-                                }
-                            }) {
-                                @Override
-                                public String getBodyContentType() {
-                                    return "application/json; charset=utf-8";
-                                }
-
-                                @Override
-                                public byte[] getBody() throws AuthFailureError {
-                                    try {
-                                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-                                    } catch (UnsupportedEncodingException uee) {
-                                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                                        return null;
-                                    }
-                                }
-
-                                @Override
-                                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                                    String responseString = "";
-                                    if (response != null) {
-                                        responseString = String.valueOf(response.statusCode);
-                                        // can get more details such as response.headers
-                                    }
-                                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-                                }
-                            };
-                            requestQueue.add(stringRequest);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
                         // rotate Image
 
 
@@ -891,7 +834,36 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                 try {
                     byte[] bytes=getBytes(getApplicationContext(),selectedImageURI);
 
-                    serVerRamy(bytes);
+                   // serVerRamy(bytes);
+                  //  System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+                    if (!OpenCVLoader.initDebug()) {
+                        Log.e(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), not working.");
+                    } else {
+                        Log.d(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), working.");
+                    }
+
+                    String pth=ImageFilePath.getPath(CustomCamaraActivity.this, data.getData());
+                    Mat source = Imgcodecs.imread(pth); //Elmoshkla f get source DEEE !
+
+                    Scanner scanner = new Scanner(source, 20);
+                    scanner.setLogging(true);
+                    String[] options = new String[]{"A", "B", "C", "D"};
+                    HashMap<Integer,String> answers=scanner.scan();
+                    int x=52;
+                List<String>Answers=new ArrayList<>();
+                    for(int i = 0; i < 20; i++){
+                      //  Integer optionIndex = answers.get(i);
+                        String ans  = (i + 1) + "-> " +answers.get(i+1);
+                        //String ans=((i + 1) + ". " + (optionIndex == null ? "EMPTY/INVALID" : options[optionIndex]));
+
+                        Answers.add(ans);
+                    }
+                    TextView ansTxtView=findViewById(R.id.Answers);
+                    StringBuilder A= new StringBuilder();
+                    for(int i = 0; i < Answers.size(); i++){
+                        A.append(Answers.get(i)).append("\n");
+                    }
+                    ansTxtView.setText(A.toString());
 
 
 
@@ -902,6 +874,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

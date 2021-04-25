@@ -141,6 +141,17 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/Answers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100sp"
+            android:gravity="center"
+            android:text="Answers"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

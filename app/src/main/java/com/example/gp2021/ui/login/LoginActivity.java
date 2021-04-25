@@ -425,8 +425,13 @@ public class LoginActivity extends AppCompatActivity {
 //if(account.getPhotoUrl()!=null)Picasso.get().load(account.getPhotoUrl()).into(img);
 
           //  Toast.makeText(getApplicationContext(), "Email= " + account.getEmail(), Toast.LENGTH_LONG).show();
-          StyleableToast.makeText(getApplicationContext(),account.getEmail() , Toast.LENGTH_LONG, R.style.toaststyle).show();
-
+         // StyleableToast.makeText(getApplicationContext(),account.getEmail() , Toast.LENGTH_LONG, R.style.toaststyle).show();
+            new StyleableToast
+                    .Builder(getApplicationContext())
+                    .text(account.getEmail())
+                    .textColor(Color.WHITE)
+                    .backgroundColor(Color.BLUE)
+                    .show();
             if (account.getEmail().equals("ibrahimkelany98@gmail.com")) {
 
 

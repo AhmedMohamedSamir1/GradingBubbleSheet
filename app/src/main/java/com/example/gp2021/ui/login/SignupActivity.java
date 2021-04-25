@@ -101,6 +101,7 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 EmailAddress = ((TextInputEditText) findViewById(R.id.et_email)).getText().toString();
+                EmailAddress=EmailAddress.replaceAll("\\s", "");
                 String UserName = ((TextInputEditText) findViewById(R.id.et_username)).getText().toString();
                 String PhoneNumber = ((TextInputEditText) findViewById(R.id.et_phone)).getText().toString();
                 String Password = ((EditText) findViewById(R.id.et_password)).getText().toString();
@@ -156,6 +157,7 @@ public class SignupActivity extends AppCompatActivity {
                                 } else //failed
                                 {
                                     Toast.makeText(getApplicationContext(), "Failed Try Again", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Make sure password > 5 chars", Toast.LENGTH_LONG).show();
 
                                 }
                             }
