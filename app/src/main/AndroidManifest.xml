@@ -26,12 +26,13 @@
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/security_config"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.GP2021"
-        tools:replace="android:icon"
-        android:networkSecurityConfig="@xml/security_config">
-        <activity android:name=".ui.instructor.RemoveCategory"></activity>
+        tools:replace="android:icon">
+        <activity android:name=".ui.instructor.PredictPerformanceKnnActivity"></activity>
+        <activity android:name=".ui.instructor.RemoveCategory" />
         <activity android:name=".ui.instructor.AddCategory" />
         <activity android:name=".ui.instructor.DeleteExam" />
         <activity android:name=".ui.instructor.AddAnswers" />
