@@ -1,21 +1,29 @@
 package com.example.gp2021.ui.instructor;
 
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
+import org.opencv.core.CvException;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import static androidx.core.content.FileProvider.getUriForFile;
 import static com.example.gp2021.ui.instructor.Util.getSource;
 
 import static com.example.gp2021.ui.instructor.Util.sout;
+import static com.example.gp2021.ui.instructor.IUtil.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,9 +31,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
@@ -38,8 +51,10 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,33 +84,41 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import at.markushi.ui.CircleButton;
 
 
 public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHolder.Callback,
         View.OnClickListener {
+    int NumOfQuestions;
     public String SelectedExam;
     Spinner ExamsSpinner;
+
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<String> arrayList;
     ArrayAdapter<String> arrayAdapter;
     private Context context;
     private SurfaceView surfaceView;
-    private Button btnLoadFromGallary;
+    private CircleButton btnLoadFromGallary;
     private SurfaceHolder surfaceHolder;
     private Camera camera;
-    private TransitionButton BtnCapturarSheet;
+    private CircleButton BtnCapturarSheet;
     private int cameraId;
-    private boolean flashmode = false;
+    //  private boolean flashmode = false;
     private int rotation;
     private ActionBar actionBar;
     private CameraSource cameraSource;
@@ -109,13 +132,16 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     public static final int REQUEST_IMAGE_CAPTURE = 0020;
     private File file;
     private String ubicacion;
+    static final int REQUEST_IMAGE = 1;
+
     private static final String TAG = "FOTOGRAFIA";
     private int Height = 620, Width = 480;
     private TextRecognizer recognizer;
     public String[] ExamID;
-   public final int SELECT_PICTURE=142;
-   public  ImageView im;
-
+    public final int SELECT_PICTURE=142;
+    public  ImageView im;
+    private final int Camera_Req=1888;
+    Bitmap imageBitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +154,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
         btnLoadFromGallary=findViewById(R.id.loadImageFromGallary);
         ExamsSpinner = (Spinner) findViewById(R.id.ListOfExams);
-       im = findViewById(R.id.dfs);
+
+        im = findViewById(R.id.dfs);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("exam");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -157,6 +184,43 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+        SwitchCompat flashSwitch=findViewById(R.id.switchFlash);
+        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                   /* boolean isFlashAvailable = getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+                     CameraManager mCameraManager;
+                    String mCameraId = null;
+                    mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+                    try {
+                        mCameraId = mCameraManager.getCameraIdList()[0];
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        mCameraManager.setTorchMode(mCameraId, true);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+*/
+
+
+                    Toast.makeText(getApplicationContext(),"FlashON",Toast.LENGTH_LONG).show();
+
+                } else {
+                    Camera.Parameters param = camera.getParameters();
+                    // boolean flashmode = false;
+                    camera.stopPreview();
+                    param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    camera.setParameters(param);
+                    camera.startPreview();
+
+                    Toast.makeText(getApplicationContext(),"FlashOFF",Toast.LENGTH_LONG).show();
+
+                }
             }
         });
         MyQuestAndAns = new HashMap<String, String>(); //Key : question Number , //value : Answer
@@ -276,7 +340,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
         });
         // camera surface view created
         cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
-        BtnCapturarSheet = (TransitionButton) findViewById(R.id.btnCapturarSheet);
+        BtnCapturarSheet = (CircleButton) findViewById(R.id.btnCapturarSheet);
         surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
         txTextoCapturado = (TextView) findViewById(R.id.tvTextoCapturado);
         surfaceHolder = surfaceView.getHolder();
@@ -297,8 +361,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
             cameraSource = new CameraSource.Builder(getApplicationContext(), recognizer)
                     .setFacing(CameraSource.CAMERA_FACING_BACK)
-                    .setRequestedPreviewSize(1280, 1024)
-                    .setRequestedFps(15.0f)
+                    .setRequestedPreviewSize(1280, 960)
+                    .setRequestedFps(30.0f)
                     .setAutoFocusEnabled(true)
                     .build();
 
@@ -394,6 +458,15 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                 }
             });
         }
+
+        NumOfQuestions = 0;
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            NumOfQuestions = bundle.getInt("Questions");
+        }
+        // Toast.makeText(getApplicationContext(),"Number= "+NumOfQuestions,Toast.LENGTH_LONG).show();
+
+
     }
 
     @Override
@@ -466,6 +539,9 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
         //releaseCamera();
         try {
             camera = Camera.open(cameraId);
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -479,6 +555,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
                     }
                 });
+
+
                 camera.setPreviewDisplay(surfaceHolder);
                 camera.startPreview();
                 result = true;
@@ -594,13 +672,13 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                 break;
         }
     }
-private void Grading(Bitmap rotatedBitmap)
-{
+    private void Grading(Bitmap rotatedBitmap)
+    {
 
 
 
 
-}
+    }
     private void takeImage() {
         try {
             //openCamera(CameraInfo.CAMERA_FACING_BACK);
@@ -616,7 +694,7 @@ private void Grading(Bitmap rotatedBitmap)
                 @Override
                 public void onPictureTaken(byte[] bytes) {
                     try {
-                        BtnCapturarSheet.startAnimation();
+                        //  BtnCapturarSheet.startAnimation();
 
                         // convert byte array into bitmap
                         Bitmap loadedImage = null;
@@ -632,10 +710,107 @@ private void Grading(Bitmap rotatedBitmap)
 
                         //   im.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.length));
                         im.setImageBitmap(rotatedBitmap);
-
+                        if (!OpenCVLoader.initDebug()) {
+                            Log.e(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), not working.");
+                        } else {
+                            Log.d(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), working.");
+                        }
 
                         // rotate Image
+                        Mat source = new Mat();
+                        Bitmap bmp32 = rotatedBitmap.copy(Bitmap.Config.ARGB_8888, true);
+                        Utils.bitmapToMat(bmp32, source);
 
+
+                        if(NumOfQuestions==60)
+                        {
+                            // Mat source = Imgcodecs.imread(getInput("60Quest2.jpg"));
+                            Mat croppedimage = source;
+                            Mat resizeimage = new Mat();
+                            Size sz = new Size(960,1280);
+                            Imgproc.resize( croppedimage, resizeimage, sz );
+                            source = resizeimage;
+                            Get60.Quadrilateral quad = Get60.findDocument(source);
+                            Get60.setTrans(quad, Get60.mark4Point(source, quad.points));
+
+
+
+
+                            Map<Integer,Object> AnsAndImage= Get60.findBubble(quad);
+                            String[]Answers=(String[]) AnsAndImage.get(0);
+                            Mat ImageResult=(Mat)AnsAndImage.get(1);
+                            System.out.println("finished");
+                            TextView ansTxtView=findViewById(R.id.Answers);
+                            StringBuilder A= new StringBuilder();
+                            for(int i = 0; i < 60; i+=3){
+                                A.append((i+1)+"."+Answers[i] +"-"+(i+2)+"."+Answers[i+1]+"-"+(i+3)+"."+Answers[i+2]).append("\n");
+                            }
+                            ansTxtView.setText(A.toString());
+                            im.setImageBitmap(convertMatToBitMap(ImageResult));
+
+
+
+                        }
+                        else if (NumOfQuestions==30)
+                        {
+                            Mat croppedimage = source;
+                            Mat resizeimage = new Mat();
+                            Size sz = new Size(960,1280);
+                            Imgproc.resize( croppedimage, resizeimage, sz );
+                            source = resizeimage;
+                            Get30.Quadrilateral quad = Get30.findDocument(source);
+                            Get30.setTrans(quad, Get30.mark4Point(source, quad.points));
+
+
+
+
+                            Map<Integer,Object> AnsAndImage= Get30.findBubble(quad);
+                            String[]Answers=(String[]) AnsAndImage.get(0);
+                            Mat ImageResult=(Mat)AnsAndImage.get(1);
+                            System.out.println("finished");
+                            TextView ansTxtView=findViewById(R.id.Answers);
+                            StringBuilder A= new StringBuilder();
+                            for(int i = 0; i < 30; i+=3){
+                                A.append((i+1)+"."+Answers[i] +"-"+(i+2)+"."+Answers[i+1]+"-"+(i+3)+"."+Answers[i+2]).append("\n");
+                            }
+                            ansTxtView.setText(A.toString());
+                            im.setImageBitmap(convertMatToBitMap(ImageResult));
+                        }
+
+                        else if(NumOfQuestions==20)
+                        {
+                            //  Toast.makeText(getApplicationContext(),"t_20Start",Toast.LENGTH_SHORT).show();
+
+                            Mat croppedimage = source;
+                            Mat resizeimage = new Mat();
+                            Size sz = new Size(960,1280);
+                            Imgproc.resize( croppedimage, resizeimage, sz );
+                            source = resizeimage;
+                            Get20.Quadrilateral quad = Get20.findDocument(source);
+                            Get20.setTrans(quad, Get20.mark4Point(source, quad.points));
+
+
+
+
+                            Map<Integer,Object> AnsAndImage= Get20.findBubble(quad);
+                            String[]Answers=(String[]) AnsAndImage.get(0);
+                            Mat ImageResult=(Mat)AnsAndImage.get(1);
+                            System.out.println("finished");
+                            TextView ansTxtView=findViewById(R.id.Answers);
+                            StringBuilder A= new StringBuilder();
+                            for(int i = 0; i < 20; i+=2){
+                                A.append((i+1)+"."+Answers[i] +"-"+(i+2)+"."+Answers[i+1]).append("\n");
+                            }
+                            ansTxtView.setText(A.toString());
+                            im.setImageBitmap(convertMatToBitMap(ImageResult));
+                            // Toast.makeText(getApplicationContext(),"20",Toast.LENGTH_SHORT).show();
+                        }
+                        else if(NumOfQuestions==10)
+                        {
+
+                          //  byte[] bytes=getBytes(getApplicationContext(),selectedImageURI);
+                            serVerRamy(bytes);
+                        }
 
 
 
@@ -823,6 +998,24 @@ private void Grading(Bitmap rotatedBitmap)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==Camera_Req&&resultCode==RESULT_OK)
+        {
+            Bundle extras = data.getExtras();
+            imageBitmap = (Bitmap) extras.get("data");
+            im.setImageBitmap(imageBitmap);
+
+
+
+
+
+
+
+
+
+
+        }
+
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
 
@@ -832,10 +1025,10 @@ private void Grading(Bitmap rotatedBitmap)
                 im.setImageURI(null);
                 im.setImageURI(selectedImageURI);
                 try {
-                    byte[] bytes=getBytes(getApplicationContext(),selectedImageURI);
 
-                   // serVerRamy(bytes);
-                  //  System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+                    // serVerRamy(bytes);
+                    //  System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
                     if (!OpenCVLoader.initDebug()) {
                         Log.e(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), not working.");
                     } else {
@@ -845,31 +1038,96 @@ private void Grading(Bitmap rotatedBitmap)
                     String pth=ImageFilePath.getPath(CustomCamaraActivity.this, data.getData());
                     Mat source = Imgcodecs.imread(pth); //Elmoshkla f get source DEEE !
 
-                    Scanner scanner = new Scanner(source, 20);
-                    scanner.setLogging(true);
-                    String[] options = new String[]{"A", "B", "C", "D"};
-                    HashMap<Integer,String> answers=scanner.scan();
-                    int x=52;
-                List<String>Answers=new ArrayList<>();
-                    for(int i = 0; i < 20; i++){
-                      //  Integer optionIndex = answers.get(i);
-                        String ans  = (i + 1) + "-> " +answers.get(i+1);
-                        //String ans=((i + 1) + ". " + (optionIndex == null ? "EMPTY/INVALID" : options[optionIndex]));
+                    //New Func
 
-                        Answers.add(ans);
+
+                    //String []Answers=new String[NumOfQuestions];
+                    if(NumOfQuestions==60)
+                    {
+                        // Mat source = Imgcodecs.imread(getInput("60Quest2.jpg"));
+                        Mat croppedimage = source;
+                        Mat resizeimage = new Mat();
+                        Size sz = new Size(960,1280);
+                        Imgproc.resize( croppedimage, resizeimage, sz );
+                        source = resizeimage;
+                        Get60.Quadrilateral quad = Get60.findDocument(source);
+                        Get60.setTrans(quad, Get60.mark4Point(source, quad.points));
+
+
+
+
+                        Map<Integer,Object> AnsAndImage= Get60.findBubble(quad);
+                        String[]Answers=(String[]) AnsAndImage.get(0);
+                        Mat ImageResult=(Mat)AnsAndImage.get(1);
+                        System.out.println("finished");
+                        TextView ansTxtView=findViewById(R.id.Answers);
+                        StringBuilder A= new StringBuilder();
+                        for(int i = 0; i < 60; i+=3){
+                            A.append((i+1)+"."+Answers[i] +"-"+(i+2)+"."+Answers[i+1]+"-"+(i+3)+"."+Answers[i+2]).append("\n");
+                        }
+                        ansTxtView.setText(A.toString());
+                        im.setImageBitmap(convertMatToBitMap(ImageResult));
+
+
+
                     }
-                    TextView ansTxtView=findViewById(R.id.Answers);
-                    StringBuilder A= new StringBuilder();
-                    for(int i = 0; i < Answers.size(); i++){
-                        A.append(Answers.get(i)).append("\n");
+                    else if (NumOfQuestions==30)
+                    {
+                        Mat croppedimage = source;
+                        Mat resizeimage = new Mat();
+                        Size sz = new Size(960,1280);
+                        Imgproc.resize( croppedimage, resizeimage, sz );
+                        source = resizeimage;
+                        Get30.Quadrilateral quad = Get30.findDocument(source);
+                        Get30.setTrans(quad, Get30.mark4Point(source, quad.points));
+
+
+
+
+                        Map<Integer,Object> AnsAndImage= Get30.findBubble(quad);
+                        String[]Answers=(String[]) AnsAndImage.get(0);
+                        Mat ImageResult=(Mat)AnsAndImage.get(1);
+                        System.out.println("finished");
+                        TextView ansTxtView=findViewById(R.id.Answers);
+                        StringBuilder A= new StringBuilder();
+                        for(int i = 0; i < 30; i+=3){
+                            A.append((i+1)+"."+Answers[i] +"-"+(i+2)+"."+Answers[i+1]+"-"+(i+3)+"."+Answers[i+2]).append("\n");
+                        }
+                        ansTxtView.setText(A.toString());
+                        im.setImageBitmap(convertMatToBitMap(ImageResult));
                     }
-                    ansTxtView.setText(A.toString());
+
+                    else if(NumOfQuestions==20)
+                    {
+                        Mat croppedimage = source;
+                        Mat resizeimage = new Mat();
+                        Size sz = new Size(960,1280);
+                        Imgproc.resize( croppedimage, resizeimage, sz );
+                        source = resizeimage;
+                        Get20.Quadrilateral quad = Get20.findDocument(source);
+                        Get20.setTrans(quad, Get20.mark4Point(source, quad.points));
 
 
 
 
+                        Map<Integer,Object> AnsAndImage= Get20.findBubble(quad);
+                        String[]Answers=(String[]) AnsAndImage.get(0);
+                        Mat ImageResult=(Mat)AnsAndImage.get(1);
+                        System.out.println("finished");
+                        TextView ansTxtView=findViewById(R.id.Answers);
+                        StringBuilder A= new StringBuilder();
+                        for(int i = 0; i < 20; i+=2){
+                            A.append((i+1)+"."+Answers[i] +"-"+(i+2)+"."+Answers[i+1]).append("\n");
+                        }
+                        ansTxtView.setText(A.toString());
+                        im.setImageBitmap(convertMatToBitMap(ImageResult));
+                    }
+                    else if(NumOfQuestions==10)
+                    {
 
-
+                        byte[] bytes=getBytes(getApplicationContext(),selectedImageURI);
+                        serVerRamy(bytes);
+                    }
 
 
 
@@ -887,123 +1145,120 @@ private void Grading(Bitmap rotatedBitmap)
     public void serVerRamy(byte[] bytes)
     {
 
-            //openCamera(CameraInfo.CAMERA_FACING_BACK);
-            //releaseCameraSource();
-            //releaseCamera();
-            //openCamera(CameraInfo.CAMERA_FACING_BACK);
-            //setUpCamera(camera);
-            //Thread.sleep(1000);
+        //openCamera(CameraInfo.CAMERA_FACING_BACK);
+        //releaseCameraSource();
+        //releaseCamera();
+        //openCamera(CameraInfo.CAMERA_FACING_BACK);
+        //setUpCamera(camera);
+        //Thread.sleep(1000);
 
 
-                File imageFile;
+        File imageFile;
 
 
-                    try {
-                        BtnCapturarSheet.startAnimation();
+        try {
+            // BtnCapturarSheet.startAnimation();
 
-                        // convert byte array into bitmap
-                        Bitmap loadedImage = null;
-                        Bitmap rotatedBitmap = null;
-                        loadedImage = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
-                        Matrix rotateMatrix = new Matrix();
-                        rotateMatrix.postRotate(rotation);
-                        rotatedBitmap = Bitmap.createBitmap(loadedImage, 0, 0,loadedImage.getWidth(), loadedImage.getHeight(),rotateMatrix, false);
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); // bm is the bitmap object
-                        byte[] b = baos.toByteArray();
-                        String encodedImage2 = Base64.encodeToString(b, Base64.DEFAULT);
+            // convert byte array into bitmap
+            Bitmap loadedImage = null;
+            Bitmap rotatedBitmap = null;
+            loadedImage = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+            Matrix rotateMatrix = new Matrix();
+            rotateMatrix.postRotate(rotation);
+            rotatedBitmap = Bitmap.createBitmap(loadedImage, 0, 0,loadedImage.getWidth(), loadedImage.getHeight(),rotateMatrix, false);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); // bm is the bitmap object
+            byte[] b = baos.toByteArray();
+            String encodedImage2 = Base64.encodeToString(b, Base64.DEFAULT);
 
-                        //   im.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.length));
-                        im.setImageBitmap(rotatedBitmap);
-                        try {
-                            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-                            /*String URL = "http://192.168.1.104:64839/Process";*/
-                            String URL = "http://uramitsys-001-site3.htempurl.com/Process";
-                            JSONObject jsonBody = new JSONObject();
-                            jsonBody.put("ID", "10");
-                            JSONObject jsonBodyImages = new JSONObject();
-                            jsonBodyImages.put("Answares", "1,2,1,2,0,3,2,1,2,2");
-                            jsonBodyImages.put("Base64", encodedImage2);
-                            jsonBody.put("Images", jsonBodyImages);
-                            final String requestBody = jsonBody.toString();
-                            String dd55="";
-                            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    Log.i("VOLLEY", response);
-                                    BtnCapturarSheet.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, new TransitionButton.OnAnimationStopEndListener() {
-                                        @Override
-                                        public void onAnimationStopEnd() {
-                                            //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
+            //   im.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.length));
+            im.setImageBitmap(rotatedBitmap);
+            try {
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                /*String URL = "http://192.168.1.104:64839/Process";*/
+                String URL = "http://uramitsys-001-site3.htempurl.com/Process";
+                JSONObject jsonBody = new JSONObject();
+                jsonBody.put("ID", "10");
+                JSONObject jsonBodyImages = new JSONObject();
+                jsonBodyImages.put("Answares", "1,2,1,2,0,3,2,1,2,2");
+                jsonBodyImages.put("Base64", encodedImage2);
+                jsonBody.put("Images", jsonBodyImages);
+                final String requestBody = jsonBody.toString();
+                String dd55="";
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("VOLLEY", response);
+
+                        //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
 
                                   /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                     startActivity(intent);*/
-                                            //HEEEEEEEEEEEEEEEEEEEEERE
-                                            String Grade = response;
-                                            BtnCapturarSheet.setText("Grade : " + Grade);
-
-                                        }
-                                    });
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.e("VOLLEY", error.toString());
-                                    BtnCapturarSheet.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, new TransitionButton.OnAnimationStopEndListener() {
-                                        @Override
-                                        public void onAnimationStopEnd() {
-                                            //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
-
-                                  /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                    startActivity(intent);*/
-                                            //HEEEEEEEEEEEEEEEEEEEEERE
-                                            String Grade = "ERROR";
-                                            BtnCapturarSheet.setText(Grade);
-
-                                        }
-                                    });
-                                }
-                            }) {
-                                @Override
-                                public String getBodyContentType() {
-                                    return "application/json; charset=utf-8";
-                                }
-
-                                @Override
-                                public byte[] getBody() throws AuthFailureError {
-                                    try {
-                                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-                                    } catch (UnsupportedEncodingException uee) {
-                                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                                        return null;
-                                    }
-                                }
-
-                                @Override
-                                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                                    String responseString = "";
-                                    if (response != null) {
-                                        responseString = String.valueOf(response.statusCode);
-                                        // can get more details such as response.headers
-                                    }
-                                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-                                }
-                            };
-                            requestQueue.add(stringRequest);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        // rotate Image
+                        //HEEEEEEEEEEEEEEEEEEEEERE
+                        String Grade = response;
+                        //  BtnCapturarSheet.setText("Grade : " + Grade);
+                        Toast.makeText(getApplicationContext(),Grade+Grade,Toast.LENGTH_LONG).show();
 
 
 
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("VOLLEY", error.toString());
+
+                        //Toast.makeText(getApplicationContext(), "Done withmail", Toast.LENGTH_LONG).show();
+
+                                  /*  Intent intent = new Intent(getBaseContext(), NewActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                    startActivity(intent);*/
+                        //HEEEEEEEEEEEEEEEEEEEEERE
+                        String Grade = "ERROR";
+                        //BtnCapturarSheet.setText(Grade);
+                        Toast.makeText(getApplicationContext(),Grade,Toast.LENGTH_LONG).show();
+
+
+                    }
+                }) {
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+
+                    @Override
+                    public byte[] getBody() throws AuthFailureError {
+                        try {
+                            return requestBody == null ? null : requestBody.getBytes("utf-8");
+                        } catch (UnsupportedEncodingException uee) {
+                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                        String responseString = "";
+                        if (response != null) {
+                            responseString = String.valueOf(response.statusCode);
+                            // can get more details such as response.headers
+                        }
+                        return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                    }
+                };
+                requestQueue.add(stringRequest);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            // rotate Image
+
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -1052,4 +1307,19 @@ private void Grading(Bitmap rotatedBitmap)
         }
         return bytesResult;
     }
+    private static Bitmap convertMatToBitMap(Mat input){
+        Bitmap bmp = null;
+        Mat rgb = new Mat();
+        Imgproc.cvtColor(input, rgb, Imgproc.COLOR_BGR2RGB);
+
+        try {
+            bmp = Bitmap.createBitmap(rgb.cols(), rgb.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(rgb, bmp);
+        }
+        catch (CvException e){
+            Log.d("Exception",e.getMessage());
+        }
+        return bmp;
+    }
+
 }

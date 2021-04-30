@@ -1,20 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SurfaceView
         android:id="@+id/surfaceView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_width="match_parent"
 
-    <ImageView
-        android:id="@+id/dfs"
-        android:layout_width="101dp"
-        android:layout_height="106dp"
-       >
+        android:layout_height="500sp" >
 
-    </ImageView>
+    </SurfaceView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,134 +20,139 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchFlash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+
         <Spinner
             android:id="@+id/ListOfExams"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="5dp"
-         >
+            android:layout_marginTop="50dp">
 
 
         </Spinner>
-        <Button
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gallary"
-            android:id="@+id/loadImageFromGallary"
+            android:layout_gravity="bottom"
             >
 
-        </Button>
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
+            <ImageView
+                android:id="@+id/square1"
+                android:layout_width="12sp"
+                android:layout_height="12sp"
+                android:layout_marginStart="110sp"
+                android:layout_marginTop="40sp"
+                android:src="@drawable/square">
 
-    <ImageView
-        android:id="@+id/square1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="15sp"
-        android:src="@drawable/square">
+            </ImageView>
+            <ImageView
+                android:id="@+id/square2"
+                android:layout_width="12sp"
+                android:layout_height="12sp"
+                android:layout_marginStart="280sp"
+                android:layout_marginTop="40sp"
+                android:src="@drawable/square">
 
-    </ImageView>
-    <ImageView
-        android:id="@+id/square2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="350sp"
-        android:src="@drawable/square">
-
-    </ImageView>
+            </ImageView>
 
 
-</RelativeLayout>
+        </RelativeLayout>
 
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
 
-    <ImageView
-        android:id="@+id/square3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="150sp"
+            <ImageView
+                android:id="@+id/square3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="150sp"
 
-        android:layout_marginStart="15sp"
-        android:src="@drawable/square">
+                android:layout_marginStart="90sp"
+                android:src="@drawable/square">
 
-    </ImageView>
-    <ImageView
-        android:id="@+id/square4"
-        android:layout_width="50dp"
-        android:layout_marginTop="150sp"
+            </ImageView>
+            <ImageView
+                android:id="@+id/square4"
+                android:layout_width="50dp"
+                android:layout_marginTop="150sp"
 
-        android:layout_height="50dp"
-        android:layout_marginStart="350sp"
-        android:src="@drawable/square">
+                android:layout_height="50dp"
+                android:layout_marginStart="290sp"
+                android:src="@drawable/square">
 
-    </ImageView>
-
-
-</RelativeLayout>
+            </ImageView>
 
 
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
-
-    <ImageView
-        android:id="@+id/square5"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="150sp"
-
-        android:layout_marginStart="15sp"
-        android:src="@drawable/square">
-
-    </ImageView>
-    <ImageView
-        android:id="@+id/square6"
-        android:layout_width="50dp"
-        android:layout_marginTop="150sp"
-
-        android:layout_height="50dp"
-        android:layout_marginStart="350sp"
-        android:src="@drawable/square">
-
-    </ImageView>
+        </RelativeLayout>
 
 
-</RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/dfs"
+                android:layout_width="204dp"
+                android:layout_height="340dp">
+
+            </ImageView>
+            <at.markushi.ui.CircleButton
+                android:id="@+id/loadImageFromGallary"
+                android:layout_width="64dip"
+                android:layout_height="64dip"
+                app:cb_color="#99CC00"
+                android:layout_gravity="bottom"
+                app:cb_pressedRingWidth="80dip"
+                android:src="@drawable/gal" />
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/btnCapturarSheet"
+                android:layout_width="177dp"
+                android:layout_height="94dp"
+                android:layout_gravity="bottom"
+                app:cb_color="#99CC00"
+                app:cb_pressedRingWidth="200dip"
+                android:src="@drawable/cap" />
+
+        </LinearLayout>
 
 
     </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvTextoCapturado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Waiting"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/Answers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100sp"
-            android:gravity="center"
-            android:text="Answers"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tvTextoCapturado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Waiting"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/Answers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100sp"
+        android:gravity="center"
+        android:text="Answers"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -164,20 +165,6 @@
         android:weightSum="30">
 
 
-
-        <com.royrodriguez.transitionbutton.TransitionButton
-            android:id="@+id/btnCapturarSheet"
-            style="@style/Button1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:gravity="center"
-            android:layout_marginRight="27dp"
-            android:layout_weight="10"
-            android:elevation="0dp"
-            android:text="Capture" />
-
-
-
     </LinearLayout>
 </RelativeLayout>
+

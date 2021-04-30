@@ -316,12 +316,14 @@
                             app:fontFamily="@font/aclonica" />
 
                         <ImageView
+
                             android:id="@+id/btn_scanAnswers"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="15dp"
-                            app:srcCompat="@drawable/scananswers" />
+                            android:src="@drawable/scananswers"
+                            />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView

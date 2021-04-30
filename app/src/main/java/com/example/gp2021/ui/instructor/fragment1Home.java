@@ -3,12 +3,18 @@ package com.example.gp2021.ui.instructor;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gp2021.R;
 
@@ -18,7 +24,7 @@ import com.example.gp2021.R;
  * create an instance of this fragment.
  */
 public class fragment1Home extends Fragment implements View.OnClickListener {
-
+    ImageView ScanAns;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -69,7 +75,8 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_fragment1_home, container, false);
-        ImageView ScanAns = (ImageView) view.findViewById(R.id.btn_scanAnswers);
+         ScanAns =  view.findViewById(R.id.btn_scanAnswers);
+
         ScanAns.setOnClickListener(this);
         ImageView CreateExam = (ImageView) view.findViewById(R.id.btn_createQuiz);
         CreateExam.setOnClickListener(this);
@@ -84,6 +91,8 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
         ImageView Predict = (ImageView) view.findViewById(R.id.btnPredict);
         Predict.setOnClickListener(this);
 
+
+
         return view;
        // return inflater.inflate(R.layout.fragment_fragment1_home, container, false);
     }
@@ -96,7 +105,53 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
 
             case R.id.btn_scanAnswers:
                  intent = new Intent(getActivity(), CustomCamaraActivity.class);
-                startActivity(intent);
+
+                PopupMenu menu = new PopupMenu(getContext(), ScanAns);
+
+                menu.getMenu().add("60 Questions");
+                menu.getMenu().add("30 Questions");
+                menu.getMenu().add("20 Questions");
+                menu.getMenu().add("10 Questions");
+
+                menu.show();
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getTitle().equals("30 Questions"))
+                        {
+                            Toast.makeText(getContext(),"30 Questions !!",Toast.LENGTH_LONG).show();
+                            intent.putExtra("Questions",30);
+                            startActivity(intent);
+                            return true;
+                        }
+
+                        else if (item.getTitle().equals("60 Questions"))
+                        {
+                            Toast.makeText(getContext(),"60 Questions !!",Toast.LENGTH_LONG).show();
+                            intent.putExtra("Questions",60);
+                            startActivity(intent);
+                            return true;
+                        }
+
+                        else if  (item.getTitle().equals("20 Questions"))
+                        {
+                            Toast.makeText(getContext(),"20 Questions !!",Toast.LENGTH_LONG).show();
+                            intent.putExtra("Questions",20);
+                            startActivity(intent);
+                            return true;
+                        }
+                        else if  (item.getTitle().equals("10 Questions"))
+                        {
+                            Toast.makeText(getContext(),"10 Questions !!",Toast.LENGTH_LONG).show();
+                            intent.putExtra("Questions",10);
+                            startActivity(intent);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+
                 break;
             case R.id.btn_createQuiz:
                 intent = new Intent(getActivity(), CreateExam.class);
