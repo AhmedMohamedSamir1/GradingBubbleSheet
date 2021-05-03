@@ -31,7 +31,7 @@ public class RemoveCategory extends AppCompatActivity {
     Spinner SpinnerCateg;
     DatabaseReference databaseReference;
     String catID;
-    String cat_ID;
+    int cat_ID;
     ArrayAdapter<String> areasAdapter;
     List<String > are;
     @Override
@@ -40,8 +40,7 @@ public class RemoveCategory extends AppCompatActivity {
         setContentView(R.layout.activity_remove_category);
 
         SpinnerCateg = (Spinner) findViewById(R.id.Spinner_selectCategtodelete);
-
-
+        
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("category");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -124,7 +123,7 @@ public class RemoveCategory extends AppCompatActivity {
                                 if(CAT.getCatName().equals(CatNameSelected))
                                 {
                                      catID = CAT.getCatID();
-                                  //  cat_ID =  new String(CAT.getCatID());
+                                    cat_ID =  Integer.parseInt(catID);
                                     databaseReference.child("category").child(catID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -141,28 +140,29 @@ public class RemoveCategory extends AppCompatActivity {
                     //-----------------------------------------------------------------------------------
        //the code in this part is to delete the questions that has catID of removed category but it doesn't work why because catID become null and we can't understand why
        // وجربنا برده نحط القيمة بتاعت ال catID جوه ال cat_ID برده ال cat_ID بتبقى ب null
-                  //  Toast.makeText(getApplicationContext(), "the cat = "+ catID ,Toast.LENGTH_LONG).show();
-                   // databaseReference.child("exam_question").addListenerForSingleValueEvent(new ValueEventListener() {
-                    //    @Override
-                    //    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                     //       Toast.makeText(getApplicationContext(), "hello1" ,Toast.LENGTH_LONG).show();
-                     //       for(DataSnapshot DS : snapshot.getChildren())
-                      //      {
-                      //          exam_question  examQuestion = DS.getValue(exam_question.class);
-                      //          Toast.makeText(getApplicationContext(), examQuestion.getCatID() ,Toast.LENGTH_LONG).show();
-                      //          if(examQuestion.getCatID().equals(catID))
-                      //          {
-                      //              Toast.makeText(getApplicationContext(), "hello3" ,Toast.LENGTH_LONG).show();
-                      //              databaseReference.child("exam_question").child(examQuestion.getExamID()).child(examQuestion.getQuestionID()).removeValue();
-                      //          }
-                       //     }
-                       // }
+                 //   String ID = String.valueOf(cat_ID);
+                 //   Toast.makeText(getApplicationContext(), "the cat = "+ catID ,Toast.LENGTH_LONG).show();
+                //    databaseReference.child("exam_question").addListenerForSingleValueEvent(new ValueEventListener() {
+                //        @Override
+                //        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //            Toast.makeText(getApplicationContext(), "hello1" ,Toast.LENGTH_LONG).show();
+                //            for(DataSnapshot DS : snapshot.getChildren())
+                //            {
+                //                exam_question  examQuestion = DS.getValue(exam_question.class);
+                //                Toast.makeText(getApplicationContext(), examQuestion.getCatID() ,Toast.LENGTH_LONG).show();
+                //                if(examQuestion.getCatID().equals(catID))
+                //                {
+                //                    Toast.makeText(getApplicationContext(), "hello3" ,Toast.LENGTH_LONG).show();
+                //                    databaseReference.child("exam_question").child(examQuestion.getExamID()).child(examQuestion.getQuestionID()).removeValue();
+                //                }
+                //            }
+                //        }
 
-                      //  @Override
-                      //  public void onCancelled(@NonNull DatabaseError error) {
+                //        @Override
+                //        public void onCancelled(@NonNull DatabaseError error) {
 
-                      //  }
-                    //});
+               //         }
+                //    });
                     //---------------------------------------------------------------------------------------------
 
 

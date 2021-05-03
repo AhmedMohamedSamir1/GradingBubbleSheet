@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.gp2021.R;
 import com.example.gp2021.data.model.exam;
+import com.example.gp2021.data.model.student;
+import com.example.gp2021.data.model.subject_student;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -69,6 +72,10 @@ public class CreateExam extends AppCompatActivity {
                 exam_Date.setText(Date);
             }
         };
+//---------------------------------------------------
+
+
+
 
 
     }
@@ -138,11 +145,12 @@ public class CreateExam extends AppCompatActivity {
         int year = C.get(Calendar.YEAR);
         int month = C.get(Calendar.MONTH);
         int day = C.get(Calendar.DAY_OF_MONTH);
-
         DatePickerDialog dialog = new DatePickerDialog(CreateExam.this,
                 android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth,DSL,year,month,day);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
     }
+
+
 }
