@@ -84,10 +84,7 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
         AddAnswers.setOnClickListener(this);
         ImageView DeleteExam = (ImageView) view.findViewById(R.id.btnRemoveExam);
         DeleteExam.setOnClickListener(this);
-        ImageView AddCat = (ImageView) view.findViewById(R.id.btn_AddCategory);
-        AddCat.setOnClickListener(this);
-        ImageView RemoveCat = (ImageView) view.findViewById(R.id.btnDeleteCateg);
-        RemoveCat.setOnClickListener(this);
+
         ImageView Predict = (ImageView) view.findViewById(R.id.btnPredict);
         Predict.setOnClickListener(this);
 
@@ -165,14 +162,7 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
                 intent = new Intent(getActivity(),DeleteExam.class);
                 startActivity(intent);
                 break;
-            case R.id.btn_AddCategory:
-                intent = new Intent(getActivity(), AddCategory.class);
-                startActivity(intent);
-                break;
-            case R.id.btnDeleteCateg:
-                intent = new Intent(getActivity(), RemoveCategory.class);
-                startActivity(intent);
-                break;
+
             case R.id.btnPredict:
                 intent = new Intent(getActivity(), PredictPerformanceKnnActivity.class);
                 startActivity(intent);
