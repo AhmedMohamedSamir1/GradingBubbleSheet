@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -52,6 +53,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -99,6 +101,7 @@ import java.util.List;
 import java.util.Map;
 
 import at.markushi.ui.CircleButton;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHolder.Callback,
@@ -112,11 +115,16 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     ArrayList<String> arrayList;
     ArrayAdapter<String> arrayAdapter;
     private Context context;
+    TextView ansTxtView;
     private SurfaceView surfaceView;
     private CircleButton btnLoadFromGallary;
     private SurfaceHolder surfaceHolder;
     private Camera camera;
     private CircleButton BtnCapturarSheet;
+    byte[] MyBytes;
+    String[]Answers;
+    private CircleButton BtnRepeat;
+    private CircleButton BtnConfirm;
     private int cameraId;
     //  private boolean flashmode = false;
     private int rotation;
@@ -124,7 +132,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     private CameraSource cameraSource;
     private StringBuilder builder;
     private TextView txTextoCapturado;
-
+    Mat source;
     public HashMap<String, String> MyQuestAndAns;
     private static CustomCamaraActivity instance;
     private Activity activity;
@@ -154,6 +162,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
         btnLoadFromGallary=findViewById(R.id.loadImageFromGallary);
         ExamsSpinner = (Spinner) findViewById(R.id.ListOfExams);
+        ExamsSpinner.setBackgroundColor(Color.rgb(226,73,138));
+
 
         im = findViewById(R.id.dfs);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("exam");
@@ -161,7 +171,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> are = new ArrayList<>();
-                are.add("Select your exam's answer");
+                are.add("Select your exam's answer -> ");
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String ExamName = ds.child("examName").getValue().toString();
                     // Toast.makeText(CustomCamaraActivity.this, "You Select exam: "+userType, Toast.LENGTH_SHORT).show();
@@ -341,11 +351,17 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
         // camera surface view created
         cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
         BtnCapturarSheet = (CircleButton) findViewById(R.id.btnCapturarSheet);
+        BtnConfirm = (CircleButton) findViewById(R.id.confirmScan);
+        BtnRepeat = (CircleButton) findViewById(R.id.tryAgain);
         surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
         txTextoCapturado = (TextView) findViewById(R.id.tvTextoCapturado);
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
         BtnCapturarSheet.setOnClickListener(this);
+        BtnConfirm.setOnClickListener(this);
+        BtnRepeat.setOnClickListener(this);
+        BtnRepeat.setVisibility(View.INVISIBLE);
+        BtnConfirm.setVisibility(View.INVISIBLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     /*if (Camera.getNumberOfCameras() > 1) {
@@ -663,8 +679,33 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
             case R.id.btnCapturarSheet:
-                takeImage();
 
+                BtnCapturarSheet.setVisibility(View.INVISIBLE);
+                BtnRepeat.setVisibility(View.VISIBLE);
+                BtnConfirm.setVisibility(View.VISIBLE);
+                ansTxtView=findViewById(R.id.Answers);
+                ansTxtView.setText("");
+                takeImage();
+                break;
+            case R.id.tryAgain:
+               BtnRepeat.setVisibility(View.INVISIBLE);
+               BtnConfirm.setVisibility(View.INVISIBLE);
+               BtnCapturarSheet.setVisibility(View.VISIBLE);
+                ansTxtView=findViewById(R.id.Answers);
+                 ansTxtView.setText("");
+                im.setImageDrawable(null);
+
+
+
+                break;
+            case R.id.confirmScan:
+                BtnRepeat.setVisibility(View.INVISIBLE);
+                BtnConfirm.setVisibility(View.INVISIBLE);
+                BtnCapturarSheet.setVisibility(View.VISIBLE);
+                Confirmation();
+                ansTxtView=findViewById(R.id.Answers);
+                ansTxtView.setText("");
+                im.setImageDrawable(null);
 
                 break;
 
@@ -672,13 +713,51 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                 break;
         }
     }
-    private void Grading(Bitmap rotatedBitmap)
-    {
 
+    private void Confirmation() {
+
+        EditText inputID=new EditText(this);
+
+
+        new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText("Enter student ID from paper" ).setCustomImage(R.drawable.app_logo_2)
+                .setCustomView(inputID)
+                .setConfirmText("Ok").setCancelText("Cancel")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+
+
+                        String ID;
+                        ID=inputID.getText().toString();
+                        // Answers --> array of strings have answers of that exam
+                        int AnswersSize= Answers.length; //20 or 30 or 60
+
+                        //Htkml Hna l7d 2bl sDialog.cancel();
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        sDialog.cancel();
+
+                    }
+                })
+                .show();
 
 
 
     }
+
+
     private void takeImage() {
         try {
             //openCamera(CameraInfo.CAMERA_FACING_BACK);
@@ -697,6 +776,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                         //  BtnCapturarSheet.startAnimation();
 
                         // convert byte array into bitmap
+
+
                         Bitmap loadedImage = null;
                         Bitmap rotatedBitmap = null;
                         loadedImage = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
@@ -717,11 +798,12 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                         }
 
                         // rotate Image
-                        Mat source = new Mat();
+                         source = new Mat();
                         Bitmap bmp32 = rotatedBitmap.copy(Bitmap.Config.ARGB_8888, true);
                         Utils.bitmapToMat(bmp32, source);
 
-
+                      //  BtnConfirm.setOnClickListener(this);
+                      MyBytes=bytes;
                         if(NumOfQuestions==60)
                         {
                             // Mat source = Imgcodecs.imread(getInput("60Quest2.jpg"));
@@ -737,10 +819,10 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
                             Map<Integer,Object> AnsAndImage= Get60.findBubble(quad);
-                            String[]Answers=(String[]) AnsAndImage.get(0);
+                            Answers=(String[]) AnsAndImage.get(0);
                             Mat ImageResult=(Mat)AnsAndImage.get(1);
                             System.out.println("finished");
-                            TextView ansTxtView=findViewById(R.id.Answers);
+                             ansTxtView=findViewById(R.id.Answers);
                             StringBuilder A= new StringBuilder();
                             for(int i = 0; i < 60; i+=3){
                                 A.append((i+1)+"."+Answers[i] +"-"+(i+2)+"."+Answers[i+1]+"-"+(i+3)+"."+Answers[i+2]).append("\n");
@@ -765,10 +847,10 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
                             Map<Integer,Object> AnsAndImage= Get30.findBubble(quad);
-                            String[]Answers=(String[]) AnsAndImage.get(0);
+                           Answers=(String[]) AnsAndImage.get(0);
                             Mat ImageResult=(Mat)AnsAndImage.get(1);
                             System.out.println("finished");
-                            TextView ansTxtView=findViewById(R.id.Answers);
+                             ansTxtView=findViewById(R.id.Answers);
                             StringBuilder A= new StringBuilder();
                             for(int i = 0; i < 30; i+=3){
                                 A.append((i+1)+"."+Answers[i] +"-"+(i+2)+"."+Answers[i+1]+"-"+(i+3)+"."+Answers[i+2]).append("\n");
@@ -793,10 +875,10 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
                             Map<Integer,Object> AnsAndImage= Get20.findBubble(quad);
-                            String[]Answers=(String[]) AnsAndImage.get(0);
+                            Answers=(String[]) AnsAndImage.get(0);
                             Mat ImageResult=(Mat)AnsAndImage.get(1);
                             System.out.println("finished");
-                            TextView ansTxtView=findViewById(R.id.Answers);
+                             ansTxtView=findViewById(R.id.Answers);
                             StringBuilder A= new StringBuilder();
                             for(int i = 0; i < 20; i+=2){
                                 A.append((i+1)+"."+Answers[i] +"-"+(i+2)+"."+Answers[i+1]).append("\n");
@@ -808,8 +890,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                         else if(NumOfQuestions==10)
                         {
 
-                          //  byte[] bytes=getBytes(getApplicationContext(),selectedImageURI);
-                            serVerRamy(bytes);
+                            //  byte[] bytes=getBytes(getApplicationContext(),selectedImageURI);
+                            serVerRamy(MyBytes);
                         }
 
 
@@ -1036,7 +1118,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                     }
 
                     String pth=ImageFilePath.getPath(CustomCamaraActivity.this, data.getData());
-                    Mat source = Imgcodecs.imread(pth); //Elmoshkla f get source DEEE !
+                     source = Imgcodecs.imread(pth); //Elmoshkla f get source DEEE !
 
                     //New Func
 
@@ -1057,7 +1139,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
                         Map<Integer,Object> AnsAndImage= Get60.findBubble(quad);
-                        String[]Answers=(String[]) AnsAndImage.get(0);
+                        Answers=(String[]) AnsAndImage.get(0);
                         Mat ImageResult=(Mat)AnsAndImage.get(1);
                         System.out.println("finished");
                         TextView ansTxtView=findViewById(R.id.Answers);
@@ -1085,7 +1167,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
                         Map<Integer,Object> AnsAndImage= Get30.findBubble(quad);
-                        String[]Answers=(String[]) AnsAndImage.get(0);
+                        Answers=(String[]) AnsAndImage.get(0);
                         Mat ImageResult=(Mat)AnsAndImage.get(1);
                         System.out.println("finished");
                         TextView ansTxtView=findViewById(R.id.Answers);
@@ -1111,7 +1193,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
 
                         Map<Integer,Object> AnsAndImage= Get20.findBubble(quad);
-                        String[]Answers=(String[]) AnsAndImage.get(0);
+                       Answers=(String[]) AnsAndImage.get(0);
                         Mat ImageResult=(Mat)AnsAndImage.get(1);
                         System.out.println("finished");
                         TextView ansTxtView=findViewById(R.id.Answers);
@@ -1128,6 +1210,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                         byte[] bytes=getBytes(getApplicationContext(),selectedImageURI);
                         serVerRamy(bytes);
                     }
+
+                    Confirmation(); // momken mt4t8lsh m3 el server
 
 
 
