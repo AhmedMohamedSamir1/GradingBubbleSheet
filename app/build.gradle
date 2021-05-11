@@ -89,6 +89,9 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.github.markushi:circlebutton:1.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
 //    implementation project(':chip-navigation-bar')
 //    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
