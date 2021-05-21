@@ -7,17 +7,24 @@ package com.example.gp2021.ui.academic;
 //Test Ibrahim
 //Test Islam
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.CursorWindow;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
@@ -33,6 +40,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 
@@ -69,6 +78,8 @@ public class AcademicHome extends AppCompatActivity implements ChipNavigationBar
 
 
         LoadFragment(new Fragment_Academic_Home());
+
+
 
 
     }
@@ -169,4 +180,4 @@ public class AcademicHome extends AppCompatActivity implements ChipNavigationBar
 
 
 
-}
+    }
