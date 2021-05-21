@@ -65,9 +65,7 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,7 +85,8 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
 
         ImageView Predict = (ImageView) view.findViewById(R.id.btnPredict);
         Predict.setOnClickListener(this);
-
+        ImageView Request = (ImageView) view.findViewById(R.id.btnRequestAnalytics);
+        Request.setOnClickListener(this);
 
 
         return view;
@@ -165,6 +164,10 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
 
             case R.id.btnPredict:
                 intent = new Intent(getActivity(), PredictPerformanceKnnActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btnRequestAnalytics:
+                intent = new Intent(getActivity(), RequestAnalyticsActivity.class);
                 startActivity(intent);
                 break;
 
