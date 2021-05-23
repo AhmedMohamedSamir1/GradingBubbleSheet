@@ -33,6 +33,7 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
     public fragment1Home() {
         // Required empty public constructor
     }
@@ -54,7 +55,6 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
         fragment.setArguments(args);
 
 
-
         return fragment;
     }
 
@@ -73,7 +73,7 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_fragment1_home, container, false);
-         ScanAns =  view.findViewById(R.id.btn_scanAnswers);
+        ScanAns = view.findViewById(R.id.btn_scanAnswers);
 
         ScanAns.setOnClickListener(this);
         ImageView CreateExam = (ImageView) view.findViewById(R.id.btn_createQuiz);
@@ -83,6 +83,9 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
         ImageView DeleteExam = (ImageView) view.findViewById(R.id.btnRemoveExam);
         DeleteExam.setOnClickListener(this);
 
+        ImageView Export = (ImageView) view.findViewById(R.id.btnExport);
+        Export.setOnClickListener(this);
+
         ImageView Predict = (ImageView) view.findViewById(R.id.btnPredict);
         Predict.setOnClickListener(this);
         ImageView Request = (ImageView) view.findViewById(R.id.btnRequestAnalytics);
@@ -90,56 +93,40 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
 
 
         return view;
-       // return inflater.inflate(R.layout.fragment_fragment1_home, container, false);
+        // return inflater.inflate(R.layout.fragment_fragment1_home, container, false);
     }
 
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch (v.getId())
-        {
+        switch (v.getId()) {
 
             case R.id.btn_scanAnswers:
-                 intent = new Intent(getActivity(), CustomCamaraActivity.class);
+                intent = new Intent(getActivity(), CustomCamaraActivity.class);
 
                 PopupMenu menu = new PopupMenu(getContext(), ScanAns);
 
                 menu.getMenu().add("60 Questions");
                 menu.getMenu().add("30 Questions");
                 menu.getMenu().add("20 Questions");
-                menu.getMenu().add("10 Questions");
 
                 menu.show();
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals("30 Questions"))
-                        {
-                            Toast.makeText(getContext(),"30 Questions !!",Toast.LENGTH_LONG).show();
-                            intent.putExtra("Questions",30);
+                        if (item.getTitle().equals("30 Questions")) {
+                            Toast.makeText(getContext(), "30 Questions !!", Toast.LENGTH_LONG).show();
+                            intent.putExtra("Questions", 30);
                             startActivity(intent);
                             return true;
-                        }
-
-                        else if (item.getTitle().equals("60 Questions"))
-                        {
-                            Toast.makeText(getContext(),"60 Questions !!",Toast.LENGTH_LONG).show();
-                            intent.putExtra("Questions",60);
+                        } else if (item.getTitle().equals("60 Questions")) {
+                            Toast.makeText(getContext(), "60 Questions !!", Toast.LENGTH_LONG).show();
+                            intent.putExtra("Questions", 60);
                             startActivity(intent);
                             return true;
-                        }
-
-                        else if  (item.getTitle().equals("20 Questions"))
-                        {
-                            Toast.makeText(getContext(),"20 Questions !!",Toast.LENGTH_LONG).show();
-                            intent.putExtra("Questions",20);
-                            startActivity(intent);
-                            return true;
-                        }
-                        else if  (item.getTitle().equals("10 Questions"))
-                        {
-                            Toast.makeText(getContext(),"10 Questions !!",Toast.LENGTH_LONG).show();
-                            intent.putExtra("Questions",10);
+                        } else if (item.getTitle().equals("20 Questions")) {
+                            Toast.makeText(getContext(), "20 Questions !!", Toast.LENGTH_LONG).show();
+                            intent.putExtra("Questions", 20);
                             startActivity(intent);
                             return true;
                         }
@@ -154,11 +141,11 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btn_AddAnswers:
-                intent = new Intent(getActivity(),AddAnswers.class);
+                intent = new Intent(getActivity(), AddAnswers.class);
                 startActivity(intent);
                 break;
             case R.id.btnRemoveExam:
-                intent = new Intent(getActivity(),DeleteExam.class);
+                intent = new Intent(getActivity(), DeleteExam.class);
                 startActivity(intent);
                 break;
 
@@ -170,11 +157,15 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
                 intent = new Intent(getActivity(), RequestAnalyticsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.btnExport:
+                intent = new Intent(getActivity(), GenratePDFActivity.class);
+                startActivity(intent);
+                break;
 
         }
         //Fragment ScanFrag = new Scan();
 
-     //   getFragmentManager().beginTransaction().replace(R.id.fragment_container,intent).commit();
+        //   getFragmentManager().beginTransaction().replace(R.id.fragment_container,intent).commit();
 
 
     }

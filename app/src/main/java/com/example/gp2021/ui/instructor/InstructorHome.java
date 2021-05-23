@@ -44,7 +44,7 @@ public class InstructorHome extends AppCompatActivity implements ChipNavigationB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructor_home);
-       getSupportActionBar().hide();
+        getSupportActionBar().hide();
 
 
 
@@ -56,28 +56,24 @@ public class InstructorHome extends AppCompatActivity implements ChipNavigationB
         animationDrawable.setEnterFadeDuration(3000);
         // setting exit fade animation duration to 2 seconds
         animationDrawable.setExitFadeDuration(2000);*/
-         navView = findViewById(R.id.bottom_navigation);
-         navView.setOnItemSelectedListener(this);
-      //  navView.setItemSelected(0,true);
+        navView = findViewById(R.id.bottom_navigation);
+        navView.setOnItemSelectedListener(this);
+        //  navView.setItemSelected(0,true);
 
 
-
-       LoadFragment(new fragment1Home());
+        LoadFragment(new fragment1Home());
 
 
     }
 
-private void LoadFragment(Fragment frag)
-{
-    if(frag!=null)
-    {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,frag).commit();
+    private void LoadFragment(Fragment frag) {
+        if (frag != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, frag).commit();
+        } else {
+            Toast.makeText(getApplicationContext(), "Fragment error", Toast.LENGTH_LONG).show();
+        }
     }
-    else
-    {
-        Toast.makeText(getApplicationContext(),"Fragment error",Toast.LENGTH_LONG).show();
-    }
-}
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -86,6 +82,7 @@ private void LoadFragment(Fragment frag)
             animationDrawable.start();
         }
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -95,15 +92,15 @@ private void LoadFragment(Fragment frag)
         }
     }
 
-   @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.bottom_menu,menu);
+        getMenuInflater().inflate(R.menu.bottom_menu, menu);
         return true;
     }
 
     @Override
     public void onItemSelected(int i) {
-        Fragment fragment=null;
+        Fragment fragment = null;
         switch (i) {
 
 
@@ -121,31 +118,32 @@ private void LoadFragment(Fragment frag)
                          finish();
 
 */
-              //  fragment=new fragment1Home();
-                fragment=new fragment1Home();
+                //  fragment=new fragment1Home();
+                fragment = new fragment1Home();
                 break;
 
             case R.id.page_2: //Mail
                 // navView.setSelectedItemId(R.id.Cart);
                 Bundle extras2 = getIntent().getExtras();
-              //  fragment=new InstractorScan();
+                //  fragment=new InstractorScan();
 
 
 //                GoogleSignInAccount account2 = (GoogleSignInAccount) extras2.get(EXTRA_MESSAGE);
-               fragment=new fragmentMail();
+                fragment = new fragmentMail();
                 break;
 
 
             case R.id.page_3: //profile
-               fragment=new FragmentProfile();
+                fragment = new FragmentProfile();
 
-               break;
+                break;
 
 
         }
 
-    LoadFragment(fragment);
+        LoadFragment(fragment);
     }
+
     @Override
     public void onStart() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

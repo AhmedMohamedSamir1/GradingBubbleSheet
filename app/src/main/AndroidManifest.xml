@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -35,7 +36,8 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.GP2021"
-        tools:replace="android:icon">
+        tools:replace="android:icon"
+        android:requestLegacyExternalStorage="true">
         <activity android:name=".ui.instructor.DetailsForOneExamActivity"></activity>
         <activity android:name=".ui.instructor.ExamsforOneSelectorActivity" />
         <activity android:name=".ui.instructor.RequestAnalyticsActivity" />
@@ -62,6 +64,7 @@
         <activity android:name=".ui.instructor.Instructor_Mail" />
         <activity android:name=".ui.instructor.InstructorHome" />
         <activity android:name=".ui.academic.AcademicHome" />
+        <activity android:name=".ui.instructor.GenratePDFActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

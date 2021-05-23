@@ -1,6 +1,5 @@
 package com.example.gp2021.ui.login;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 
 import androidx.annotation.NonNull;
@@ -9,11 +8,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.database.CursorWindow;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -27,41 +23,30 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.dd.CircularProgressButton;
-import com.example.gp2021.BuildConfig;
 import com.example.gp2021.R;
 import com.example.gp2021.ui.academic.AcademicHome;
-import com.example.gp2021.ui.instructor.FragmentProfile;
 import com.example.gp2021.ui.instructor.InstructorHome;
-import com.example.gp2021.ui.login.LoginViewModel;
-import com.example.gp2021.ui.login.LoginViewModelFactory;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.shimmer.Shimmer;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -71,22 +56,13 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Objects;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.royrodriguez.transitionbutton.TransitionButton;
-import com.squareup.picasso.Picasso;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-import tyrantgit.explosionfield.ExplosionField;
-
-import android.app.Activity;
 
 //import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
@@ -98,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     public static Activity myActivity;
     public TransitionButton loginButton;
     private AccessTokenTracker accessTokenTracker;
-   // LoginButton fbLogin;
+    // LoginButton fbLogin;
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth mAuth;
     CallbackManager callbackManager;
@@ -109,11 +85,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-        LoginActivity.myActivity=this;
+        LoginActivity.myActivity = this;
 
-
-
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
 
 
@@ -131,70 +105,68 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         com.facebook.login.widget.LoginButton fbLogin = new LoginButton(this);
-        ImageView fbLogin2=(ImageView)findViewById(R.id.signinFacebook);
+        ImageView fbLogin2 = (ImageView) findViewById(R.id.signinFacebook);
         fbLogin2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fbLogin.performClick();
             }
         });
-       fbLogin.setReadPermissions(Arrays.asList(EMAIL));
+        fbLogin.setReadPermissions(Arrays.asList(EMAIL));
         callbackManager = CallbackManager.Factory.create();
-        fbLogin.setReadPermissions("email","public_profile");
+        fbLogin.setReadPermissions("email", "public_profile");
         fbLogin.registerCallback(callbackManager, new FacebookCallback<com.facebook.login.LoginResult>() {
-                    @Override
-                    public void onSuccess(com.facebook.login.LoginResult loginResult) {
-                    handleFacebookAccessToken(loginResult.getAccessToken());
-                     //   updateUI();
-                    }
+            @Override
+            public void onSuccess(com.facebook.login.LoginResult loginResult) {
+                handleFacebookAccessToken(loginResult.getAccessToken());
+                //   updateUI();
+            }
 
-                    @Override
-                    public void onCancel() {
+            @Override
+            public void onCancel() {
 
-                    }
+            }
 
-                    @Override
-                    public void onError(FacebookException error) {
+            @Override
+            public void onError(FacebookException error) {
 
-                    }
-                });
-        authStateListener=new FirebaseAuth.AuthStateListener() {
+            }
+        });
+        authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user=firebaseAuth.getCurrentUser();
-                if (user!=null) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
                     updateUI(user);
-                }
-                else updateUI(null);
+                } else updateUI(null);
             }
 
         };
-        accessTokenTracker=new AccessTokenTracker() {
+        accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                if(currentAccessToken==null)
-                {
+                if (currentAccessToken == null) {
                     mAuth.signOut();
                 }
             }
         };
-                // initializing animation drawable by getting background from constraint layout
-                //  animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
-                // setting enter fade animation duration to 3 seconds
-                //animationDrawable.setEnterFadeDuration(3000);
-                // setting exit fade animation duration to 2 seconds
-                //    animationDrawable.setExitFadeDuration(2000);
-                loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                        .get(LoginViewModel.class);
+        // initializing animation drawable by getting background from constraint layout
+        //  animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
+        // setting enter fade animation duration to 3 seconds
+        //animationDrawable.setEnterFadeDuration(3000);
+        // setting exit fade animation duration to 2 seconds
+        //    animationDrawable.setExitFadeDuration(2000);
+        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
+                .get(LoginViewModel.class);
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
-        loginButton = (TransitionButton)findViewById(R.id.loginbtn);
+        loginButton = (TransitionButton) findViewById(R.id.loginbtn);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
        /* GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();*/
 
-      //  SignInButton signInButton = findViewById(R.id.sign_in_buttonGoogle);
+        //  SignInButton signInButton = findViewById(R.id.sign_in_buttonGoogle);
 //        signInButton.setSize(SignInButton.SIZE_STANDARD);
         CreateRequest();
         findViewById(R.id.sign_in_buttonGoogle).setOnClickListener(new View.OnClickListener() {
@@ -359,7 +331,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-       FirebaseUser user=mAuth.getCurrentUser();
+        FirebaseUser user = mAuth.getCurrentUser();
         mAuth.addAuthStateListener(authStateListener); //facebook
         updateUI(user);
 
@@ -368,7 +340,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-      mAuth.removeAuthStateListener(authStateListener);
+        mAuth.removeAuthStateListener(authStateListener);
 
     }
 
@@ -409,23 +381,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-        callbackManager.onActivityResult(requestCode,resultCode,data);
-
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
 
     }
 
 
-
-
     void updateUI(FirebaseUser account) {
 
         if (account != null) {
-          //  ImageView img =findViewById(R.id.profile_image);
+            //  ImageView img =findViewById(R.id.profile_image);
 //if(account.getPhotoUrl()!=null)Picasso.get().load(account.getPhotoUrl()).into(img);
 
-          //  Toast.makeText(getApplicationContext(), "Email= " + account.getEmail(), Toast.LENGTH_LONG).show();
-         // StyleableToast.makeText(getApplicationContext(),account.getEmail() , Toast.LENGTH_LONG, R.style.toaststyle).show();
+            //  Toast.makeText(getApplicationContext(), "Email= " + account.getEmail(), Toast.LENGTH_LONG).show();
+            // StyleableToast.makeText(getApplicationContext(),account.getEmail() , Toast.LENGTH_LONG, R.style.toaststyle).show();
             new StyleableToast
                     .Builder(getApplicationContext())
                     .text(account.getEmail())
@@ -452,8 +421,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void CreateRequest()
-    {
+    private void CreateRequest() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -462,8 +430,8 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
     }
-    private void signInWithGoogle()
-    {
+
+    private void signInWithGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
 
         startActivityForResult(signInIntent, 200);
@@ -472,7 +440,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void signInWithFacebook() {
-
 
 
     }
@@ -518,7 +485,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            StyleableToast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT,R.style.toaststyle).show();
+                            StyleableToast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT, R.style.toaststyle).show();
                             updateUI(null);
                         }
 
@@ -526,8 +493,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
 
 
 }
