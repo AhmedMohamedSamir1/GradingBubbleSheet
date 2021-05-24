@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="5sp"
+    tools:context=".ui.academic.addStudent">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Student ID"
+        android:inputType="number"
+        android:id="@+id/editStdID"
+        android:layout_marginBottom="5sp"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:inputType="text"
+        android:hint="Student Name"
+        android:id="@+id/editStdName"
+        android:layout_marginBottom="5sp"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Student Email"
+        android:layout_marginBottom="5sp"
+        android:inputType="textEmailAddress"
+        android:id="@+id/editStdEmail"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Travel Time"
+        android:layout_marginBottom="5sp"
+        android:id="@+id/editStdTravelTime"
+        android:editable="false"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Study Time"
+        android:editable="false"
+        android:id="@+id/editStdStudyTime"
+        android:layout_marginBottom="5sp"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Number of past courses failures"
+        android:inputType="number"
+        android:id="@+id/editStdPastFailures"
+        android:layout_marginBottom="5sp"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Participate in activities"
+        android:id="@+id/editStdActivities"
+        android:editable="false"
+        android:layout_marginBottom="5sp"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Free time after school or university"
+        android:editable="false"
+        android:id="@+id/editStdFreeTime"
+        android:layout_marginBottom="5sp"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Going out with friends"
+        android:id="@+id/editStdGoingOut"
+        android:layout_marginBottom="5sp"
+        android:editable="false"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Current health status"
+        android:id="@+id/editStdHealthStatus"
+        android:editable="false"
+        android:layout_marginBottom="5sp"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Number of Student Absecnces"
+        android:inputType="number"
+        android:id="@+id/editStdAbsecnce"
+        android:layout_marginBottom="5sp"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:padding="10sp"
+        android:singleLine="true"
+        android:hint="Student Gender"
+        android:id="@+id/editStdGender"
+        android:layout_marginBottom="5sp"
+        android:editable="false"
+        android:layout_height="match_parent"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:text="add student"
+        android:id="@+id/btnAddStd"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+
+</ScrollView>

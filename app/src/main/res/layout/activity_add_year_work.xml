@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="7sp"
+    tools:context=".ui.academic.addYearWork">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+
+            <TextView
+                android:layout_width="180sp"
+                android:text="select course :"
+                android:textSize="22sp"
+                android:layout_marginBottom="3sp"
+                android:fontFamily="@font/aclonica"
+                android:layout_height="match_parent"/>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_marginLeft="35sp"
+                android:layout_marginBottom="10sp"
+                android:id="@+id/spnCoursesNames"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:layout_width="180sp"
+                android:text="select student :"
+                android:textSize="20sp"
+                android:layout_marginBottom="3sp"
+                android:fontFamily="@font/aclonica"
+                android:layout_height="match_parent"/>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:id="@+id/spnStdNames"
+                android:layout_marginLeft="35sp"
+                android:layout_marginBottom="10sp"
+                android:layout_height="match_parent"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:id="@+id/editQuiz1"
+            android:hint="Quiz1"
+            android:layout_marginBottom="5sp"
+            android:inputType="numberDecimal"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:id="@+id/editQuiz2"
+            android:inputType="numberDecimal"
+            android:hint="Quiz2"
+            android:layout_marginBottom="5sp"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:layout_width="match_parent"
+            android:text="ADD year work"
+            android:textSize="20sp"
+            android:id="@+id/btnAddStdYW"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:text="edit year work"
+            android:textSize="20sp"
+            android:id="@+id/btnEditStdYW"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:layout_width="match_parent"
+            android:text="Delete year work"
+            android:textSize="20sp"
+            android:id="@+id/btnDelStdYW"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</ScrollView>
