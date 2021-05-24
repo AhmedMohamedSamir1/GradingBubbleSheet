@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.gp2021">
 
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,9 +22,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <uses-feature android:name="android.hardware.camera.flash" />
-
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -36,10 +35,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GP2021"
         tools:replace="android:icon">
-        <activity android:name=".ui.instructor.DetailsForOneExamActivity"></activity>
-        <activity android:name=".ui.instructor.ExamsforOneSelectorActivity" />
-        <activity android:name=".ui.instructor.RequestAnalyticsActivity" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.gp2021.fileprovider"
@@ -50,7 +45,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".ui.instructor.PredictPerformanceKnnActivity" />
+        <activity android:name=".ui.instructor.PredictPerformanceKnnActivity"></activity>
         <activity android:name=".ui.instructor.RemoveCategory" />
         <activity android:name=".ui.instructor.AddCategory" />
         <activity android:name=".ui.instructor.DeleteExam" />

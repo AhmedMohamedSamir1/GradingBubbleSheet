@@ -499,7 +499,6 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
 
             float accuracy = sum/predicted_values.size()*100;
             textAccuracy.setText("Accuracy: "+String.valueOf(accuracy));
-            //Toast.makeText(getApplicationContext(),"Accuracy : "+accuracy,Toast.LENGTH_LONG).show();
     }
 
     public char KNN_testing1 (List<List<Object>> train_DS, List<Object> test_record, int K, int test_index)

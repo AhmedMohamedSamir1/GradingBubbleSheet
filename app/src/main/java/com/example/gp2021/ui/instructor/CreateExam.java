@@ -16,9 +16,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
+import com.example.gp2021.data.model.course;
 import com.example.gp2021.data.model.exam;
 import com.example.gp2021.data.model.student;
-import com.example.gp2021.data.model.subject_student;
+import com.example.gp2021.data.model.course_student;
+import com.example.gp2021.ui.academic.Fragment_Academic_Home;
+import com.example.gp2021.ui.academic.addStudent;
+import com.example.gp2021.ui.academic.addYearWork;
+import com.example.gp2021.ui.academic.add_course;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -74,22 +79,49 @@ public class CreateExam extends AppCompatActivity {
         };
 //---------------------------------------------------
 
+    Button btnGoToInstr = (Button)findViewById(R.id.btnGoToInstr);
+        btnGoToInstr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent I = new Intent(CreateExam.this, addStudent.class);
+                startActivity(I);
+
+            }
+        });
+
+        Button btnYearWork = (Button)findViewById(R.id.btnAddYearWork);
+        btnYearWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent I = new Intent(CreateExam.this, addYearWork.class);
+                startActivity(I);
+
+            }
+        });
 
 
+        Button btnAddCourse = (Button)findViewById(R.id.btnAddCourse);
+        btnAddCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent I = new Intent(CreateExam.this, add_course.class);
+                startActivity(I);
 
+            }
+        });
 
     }
     public void createExam()
     {
-        user_ID = (EditText)findViewById(R.id.EuserID);
-        exam_ID = (EditText)findViewById(R.id.EexamID);
+       // user_ID = (EditText)findViewById(R.id.EuserID);
+       // exam_ID = (EditText)findViewById(R.id.EexamID);
         exam_Name = (EditText)findViewById(R.id.EexamName);
         exam_Grade = (EditText)findViewById(R.id.EexamGrade);
         exam_Date = (EditText)findViewById(R.id.EexamDate);
 
-        String userID = user_ID.getText().toString();
-        String examID = exam_ID.getText().toString();
-        String examName = exam_Name.getText().toString();
+      //  String userID = user_ID.getText().toString();
+        //String examID = exam_ID.getText().toString();
+        String examName = exam_Name.getText().toString().toLowerCase();
         String examDate = exam_Date.getText().toString();
         String examGrade = exam_Grade.getText().toString();
 
@@ -98,16 +130,35 @@ public class CreateExam extends AppCompatActivity {
         LoadingBar.setMessage("please wait until exam is created");
         LoadingBar.setCanceledOnTouchOutside(false);
 
-        if(!userID.equals("")&&!examID.equals("")&&!examName.equals("")&&!examDate.equals("")&&!examGrade.equals(""))
+        if(!examName.equals("")&&!examDate.equals("")&&!examGrade.equals(""))
         {
             LoadingBar.show();
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
             rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(!snapshot.child("exam").child(examID).exists())
+                    String examID =  String.valueOf(snapshot.child("exam").getChildrenCount()+1);
+                    while (true)
                     {
-                        exam examData = new exam(examID,examName,examDate,examGrade,userID);
+                        if (!snapshot.child("exam").child(examID).exists())
+                            break;
+                        int cc = Integer.parseInt(examID)+1;
+                        examID = String.valueOf(cc);
+                    }
+
+                    exam examData = new exam(examID,examName,examDate,examGrade);
+                    boolean flag = true;
+                    for (DataSnapshot ds: snapshot.child("exam").getChildren())
+                    {
+                        exam exam = ds.getValue(exam.class);
+                        if(examData.getExamName().equals(exam.getExamName()))
+                        {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if(flag)
+                    {
                         rootRef.child("exam").child(examID).setValue(examData);
                         rootRef.child("exam").child(examID).setValue(examData).addOnCompleteListener(new OnCompleteListener<Void>() {
 
@@ -122,10 +173,11 @@ public class CreateExam extends AppCompatActivity {
                                 LoadingBar.dismiss();
                             }
                         });
-
                     }
+
+
                     else
-                    {Toast.makeText(getApplicationContext(),"exam id already used",Toast.LENGTH_LONG).show();  LoadingBar.dismiss(); }
+                    {Toast.makeText(getApplicationContext(),"exam name is already created",Toast.LENGTH_LONG).show();  LoadingBar.dismiss(); }
                 }
 
                 @Override
