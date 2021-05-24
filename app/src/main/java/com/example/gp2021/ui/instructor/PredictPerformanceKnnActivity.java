@@ -6,19 +6,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
+import com.example.gp2021.data.model.course;
 import com.example.gp2021.data.model.student;
-import com.example.gp2021.data.model.subject_student;
+import com.example.gp2021.data.model.course_student;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -35,6 +41,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -42,29 +49,58 @@ import java.util.Map;
 
 public class PredictPerformanceKnnActivity extends AppCompatActivity {
 
+    ProgressDialog LoadingBar;
     DatabaseReference rootRef;
     ArrayAdapter<String> coursesNames ;
     Spinner SpinnerCourses;
     TransitionButton buttonStudentExpectation;
     PieChart pieChart;
     TextView textAccuracy;
+    TextView textStudentsAtRisk;
+    ListView listStdsAtRisk;
+    ArrayAdapter<String> arrStdsAtRisk;
+    private String sharedPrefFile ="com.example.gp";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.predict_performance_knn);
-
+        LoadingBar = new ProgressDialog(this);
         rootRef = FirebaseDatabase.getInstance().getReference();
         coursesNames  = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         SpinnerCourses = (Spinner) findViewById(R.id.spinner_selectCoursetoPredict);
         buttonStudentExpectation = (TransitionButton) findViewById(R.id.btnStudentExpectation);
         textAccuracy = (TextView)findViewById(R.id.txtAccuracy);
         pieChart = (PieChart)findViewById(R.id.pieChart);
+        textStudentsAtRisk = (TextView)findViewById(R.id.txtStdAtRisk);
+        listStdsAtRisk = (ListView)findViewById(R.id.listStdAtRisk);
+
         getCoursesNames();
+
         buttonStudentExpectation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                load_students();
+
+                PopupMenu popup = new PopupMenu(PredictPerformanceKnnActivity.this, buttonStudentExpectation);
+                popup.getMenu().add("predict pass / fail");
+                popup.getMenu().add("predict pass (with grades) / fail");
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        if(item.getTitle().toString().equals("predict pass / fail"))
+                        {
+                            load_students(item.getTitle().toString());
+                        }
+                        else if(item.getTitle().toString().equals("predict pass (with grades) / fail"))
+                        {
+                            load_students(item.getTitle().toString());
+                        }
+                        return true;
+                    }
+                });
+                popup.show();//showing popup menu
             }
         });
 
@@ -72,12 +108,12 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
     }
     public void getCoursesNames()
     {
-        rootRef.child("exam").addListenerForSingleValueEvent(new ValueEventListener() {
+        rootRef.child("course").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren())
                 {
-                    String courseName = ds.child("examName").getValue().toString();
+                    String courseName = ds.child("courseName").getValue().toString();
                     coursesNames.add(courseName);
                 }
                 SpinnerCourses.setAdapter(coursesNames);
@@ -87,15 +123,21 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
-    public void  load_students ()
+    public void  load_students (String status)
     {
+        LoadingBar.setTitle("Predict Performance");
+        LoadingBar.setMessage("please wait until processing complete");
+        LoadingBar.setCanceledOnTouchOutside(false);
+        LoadingBar.show();
+        changeListViewColor();
+        //-----------------------------------------------------------------------------------------------------------------------
         List<Object> REC ;
         List<List<Object>> train_DS = new ArrayList<List<Object>>();
         String [] arr ;
         String line="";
 
         try {
-            InputStream IS = this.getResources().openRawResource(R.raw.student_dataset2);
+            InputStream IS = this.getResources().openRawResource(R.raw.student_dataset3);
             BufferedReader reader = new BufferedReader(new InputStreamReader(IS));
             if (IS!=null)
             {
@@ -109,146 +151,112 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
 
                         if(arr[0].equals("F")) { REC.add(0); } else { REC.add(1); }    // gender
 
-                        REC.add(Integer.parseInt(arr[1]));                             // age
+                        REC.add(Integer.parseInt(arr[1]));                             // travel time
 
-                        if(arr[2].equals("U")) { REC.add(0); } else {  REC.add(1); }   // home address type
+                        REC.add(Integer.parseInt(arr[2])); // weekly study time
 
-                        if (arr[3].equals("LE3")) { REC.add(0); } else { REC.add(1);}   // family size
+                        REC.add(Integer.parseInt(arr[3]));  // number of past class failures
+                        if(arr[4].equals("no")) { REC.add(0); } else {  REC.add(1); }    // extra-curricular activities
 
-                        if(arr[4].equals("A")) { REC.add(0); } else {  REC.add(1); }    // parent status
-
-                        REC.add(Integer.parseInt(arr[5]));  // mother education
-
-                        REC.add(Integer.parseInt(arr[6]));  // father education
-
-                        if(arr[7].equals("teacher")) REC.add("10000"); else if (arr[7].equals("health")) REC.add("01000");
-                        else if (arr[7].equals("services")) REC.add("00100"); else if (arr[7].equals("at_home"))  REC.add("00010"); else REC.add("00001");
-
-                        if(arr[8].equals("teacher")) REC.add("10000"); else if (arr[8].equals("health")) REC.add("01000");
-                        else if (arr[8].equals("services")) REC.add("00100"); else if (arr[8].equals("at_home"))  REC.add("00010"); else REC.add("00001");
-
-                        if(arr[9].equals("home")) REC.add("0000"); else if (arr[9].equals("reputation")) REC.add("0100");
-                        else if (arr[9].equals("course")) REC.add("0010"); else REC.add("0001");
-
-                        REC.add(Integer.parseInt(arr[10]));  // travel time to school
-
-                        REC.add(Integer.parseInt(arr[11])); // weekly study time
-
-                        REC.add(Integer.parseInt(arr[12]));  // number of past class failures
-
-                        if(arr[13].equals("no")) { REC.add(0); } else {  REC.add(1); }    //  extra educational (school) support
-
-                        if(arr[14].equals("no")) { REC.add(0); } else {  REC.add(1); }    // family educational support
-
-                        if(arr[15].equals("no")) { REC.add(0); } else {  REC.add(1); }    // extra-curricular activities
-
-                        if(arr[16].equals("no")) { REC.add(0); } else {  REC.add(1); }    // attended nursery school
-
-                        if(arr[17].equals("no")) { REC.add(0); } else {  REC.add(1); }    // Internet access at home
-
-                        if(arr[18].equals("no")) { REC.add(0); } else {  REC.add(1); }    // with a relationship
-
-                        REC.add(Integer.parseInt(arr[19])); // quality of family relationships
-                        REC.add(Integer.parseInt(arr[20])); // free time after school
-                        REC.add(Integer.parseInt(arr[21])); // going out with friends
-                        REC.add(Integer.parseInt(arr[22])); // current health status
-                        REC.add(Integer.parseInt(arr[23])); // number of school absences
-                        REC.add(Integer.parseInt(arr[24])); // quiz1
-                        REC.add(Integer.parseInt(arr[25])); // quiz2
-                        REC.add((arr[26])); // final grade
+                        REC.add(Integer.parseInt(arr[5])); // free time after school
+                        REC.add(Integer.parseInt(arr[6])); // going out with friends
+                        REC.add(Integer.parseInt(arr[7])); // current health status
+                        REC.add(Integer.parseInt(arr[8])); // number of school absences
+                        REC.add(Integer.parseInt(arr[9])); // quiz1
+                        REC.add(Integer.parseInt(arr[10])); // quiz2
+                        REC.add((arr[11])); // final grade
                         train_DS.add(REC);
 
                     }
                     else { flag = true;}
                 }
-
-
-
-
                 //----------------------------------------
-                rootRef.child("student").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     float GA =0, GB=0, GC=0, GD=0 , GF = 0;
                     int count = 0;
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot ds : snapshot.getChildren())
+                        String courseID = "";
+                        for(DataSnapshot ds : snapshot.child("course").getChildren())
                         {
-                            student st = ds.getValue(student.class);
-                            List L = new ArrayList();
-                            L.add(st.getGender());
-                            L.add(st.getAge());
-                            L.add(st.getAddress());
-                            L.add(st.getFamSize());
-                            L.add(st.getParentStatus());
-                            L.add(st.getMotEdu());
-                            L.add(st.getFatEdu());
-                            L.add(st.getMotJob());
-                            L.add(st.getFatJob());
-                            L.add(st.getReason());
-                            L.add(st.getTravelTime());
-                            L.add(st.getStudyTime());
-                            L.add(st.getFailures());
-                            L.add(st.getSchoolSup());
-                            L.add(st.getFamSup());
-                            L.add(st.getActivities());
-                            L.add(st.getNursery());
-                            L.add(st.getInternet());
-                            L.add(st.getRomantic());
-                            L.add(st.getFamRel());
-                            L.add(st.getFreeTime());
-                            L.add(st.getGoOut());
-                            L.add(st.getHealth());
+                            course c = ds.getValue(course.class);
+                            if(c.getCourseName().equals(SpinnerCourses.getSelectedItem().toString()))
+                                courseID = c.getCourseID();
+                        }
 
-                            rootRef.child("subject_student").child("1").addListenerForSingleValueEvent(new ValueEventListener() {
+                        if(snapshot.child("course_student").child(courseID).getChildrenCount()==snapshot.child("student").getChildrenCount())
+                        {
+                            for(DataSnapshot ds : snapshot.child("student").getChildren())
+                            {
+                                student st = ds.getValue(student.class);
+                                List L = new ArrayList();
+                                L.add(st.getGender());
+                                L.add(st.getTravelTime());
+                                L.add(st.getStudyTime());
+                                L.add(st.getFailures());
+                                L.add(st.getActivities());
+                                L.add(st.getFreeTime());
+                                L.add(st.getGoOut());
+                                L.add(st.getHealth());
+                                L.add(st.getAbsence());
 
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot1) {
-                                    for (DataSnapshot DS1 : snapshot1.getChildren())
-                                    {
-                                        subject_student subStd = DS1.getValue(subject_student.class);
-                                        if(subStd.getStdID().equals(st.getStdID()))
+                                rootRef.child("course_student").child(courseID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot1) {
+                                        for (DataSnapshot DS1 : snapshot1.getChildren())
                                         {
-                                            count++;
-                                            L.add(subStd.getAbsence());
-                                            L.add(subStd.getQuiz1());
-                                            L.add(subStd.getQuiz2());
-                                            break;
+                                            course_student course_Std = DS1.getValue(course_student.class);
+                                            if(course_Std.getStdID().equals(st.getStdID()))
+                                            {
+                                                count++;
+                                                L.add(course_Std.getQuiz1());
+                                                L.add(course_Std.getQuiz2());
+                                                break;
+                                            }
+                                        }
+
+                                        List<Object> std_rec = toNumeric(L);
+                                        char C = KNN(train_DS, std_rec,23);
+                                        if(C=='A') GA++;
+                                        if(C=='B') GB++;
+                                        if(C=='C') GC++;
+                                        if(C=='D') GD++;
+                                        if(C=='F') {GF++; arrStdsAtRisk.add(st.getStdName());}
+                                        if(count==snapshot1.getChildrenCount())
+                                        {
+                                            LoadingBar.dismiss();
+                                            ViewPieChart(GA, GB, GC, GD, GF, count ,status);
+                                            viewStdAtRisk(arrStdsAtRisk);
                                         }
                                     }
-                           //         Toast.makeText(getApplicationContext(),L.get(25).toString() + " "+ L.get(2).toString() ,Toast.LENGTH_LONG).show();
-                                    List<Object> std_rec = toNumeric(L);
-                                    char C = KNN(train_DS, std_rec,7);
-                                    if(C=='A') GA++;
-                                    if(C=='B') GB++;
-                                    if(C=='C') GC++;
-                                    if(C=='D') GD++;
-                                    if(C=='F') GF++;
-                                    //    Toast.makeText(getApplicationContext(),"count "+count+" "+"children "+ snapshot1.getChildrenCount() ,Toast.LENGTH_LONG).show();
-                                    if(count==snapshot1.getChildrenCount())
-                                    {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) { }
+                                });
+                            }
 
-                                        GA = GA/ snapshot1.getChildrenCount()*100;
-                                        GB = GB/ snapshot1.getChildrenCount()*100;
-                                        GC = GC/ snapshot1.getChildrenCount()*100;
-                                        GD = GD/ snapshot1.getChildrenCount()*100;
-                                        GF = GF/ snapshot1.getChildrenCount()*100;
-                           //           Toast.makeText(getApplicationContext(),"A = "+ GA+" B= "+GB+ " C = "+GC+" D "+GD,Toast.LENGTH_LONG).show();
-
-                                        ViewPieChart(GA, GB, GC, GD, GF);
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) { }
-                            });
-
+                        }
+                        else
+                        { Toast.makeText(getApplicationContext(),"students year work of "+
+                                SpinnerCourses.getSelectedItem().toString()+" course is not added completely ",Toast.LENGTH_LONG).show();
+                            LoadingBar.dismiss();
                         }
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
-
             }
-               cross_validation_leave_one_out(train_DS);
+
+
+
+            SharedPreferences sharedPref = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+            if(sharedPref.contains(status))
+            {
+                String acc = sharedPref.getString(status,"not found");
+                textAccuracy.setText("Accuracy: "+String.valueOf(acc));
+            }
+            else
+                cross_validation_leave_one_out(train_DS, status);
         }
         catch (Exception E){Toast.makeText(getApplicationContext(),E.getMessage(),Toast.LENGTH_LONG).show();}
     }
@@ -289,7 +297,7 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
             temp = sorteddistances.get(i);
             double x = temp.get(0);
             int index = (int)x;
-            String grade = String.valueOf(train_DS.get(index).get(26));
+            String grade = String.valueOf(train_DS.get(index).get(11));
 
             //    Toast.makeText(getApplicationContext(),"index ="+index+" "+"grade ="+grade,Toast.LENGTH_LONG).show();
             if(grade.equals("A"))
@@ -333,7 +341,7 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
             temp = sorteddistances.get(i);
             double x = temp.get(0);
             int index = (int)x;
-            String grade = String.valueOf(train_DS.get(index).get(26));
+            String grade = String.valueOf(train_DS.get(index).get(11));
             double weight = weightedDeicision.get(i);
 
             if(grade.equals("A"))
@@ -368,24 +376,13 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
         double sum = 0;
         double def;
         for(int i =0 ; i<l1.size()-1; i ++){
-            if(i == 7 || i==8 || i ==9)
-            {
-                String str = String.valueOf(l1.get(i));
-                int Len = str.length();
-                for (int j = 0 ; j <Len ; j++)
-                {
-                    def =   Float.parseFloat(String.valueOf(l1.get(j))) - Float.parseFloat(String.valueOf(l2.get(j)));
-                    def  = def * def;
-                    sum=sum+def;
-                }
-                continue;
-            }
             def =   Float.parseFloat(String.valueOf(l1.get(i))) - Float.parseFloat(String.valueOf(l2.get(i)));
             def  = def*def;
             sum += def;
             //s+= Math.abs(l1.get(i)- l2.get(i));
         }
         sum = Math.sqrt(sum);
+
         return sum;
     }
 
@@ -396,66 +393,56 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
         List<Object> REC = new ArrayList<>();
         if(arr.get(0).toString().equals("F")) { REC.add(0); } else { REC.add(1); }    // gender
 
-        REC.add(Integer.parseInt(arr.get(1).toString()));                             // age
+        REC.add(Integer.parseInt(arr.get(1).toString()));  // travel time to school
 
-        if(arr.get(2).toString().equals("U")) { REC.add(0); } else {  REC.add(1); }   // home address type
+        REC.add(Integer.parseInt(arr.get(2).toString())); // weekly study time
 
-        if (arr.get(3).toString().equals("LE3")) { REC.add(0); } else { REC.add(1);}   // family size
+        REC.add(Integer.parseInt(arr.get(3).toString()));  // number of past class failures
 
-        if(arr.get(4).toString().equals("A")) { REC.add(0); } else {  REC.add(1); }    // parent status
+        if(arr.get(4).toString().equals("no")) { REC.add(0); } else {  REC.add(1); }    // extra-curricular activities
 
-        REC.add(Integer.parseInt(arr.get(5).toString()));  // mother education
-
-        REC.add(Integer.parseInt(arr.get(6).toString()));  // father education
-
-        if(arr.get(7).toString().equals("teacher")) REC.add("10000"); else if (arr.get(7).toString().equals("health")) REC.add("01000");
-        else if (arr.get(7).toString().equals("services")) REC.add("00100"); else if (arr.get(7).toString().equals("at_home"))  REC.add("00010"); else REC.add("00001");
-
-        if(arr.get(8).toString().equals("teacher")) REC.add("10000"); else if (arr.get(8).toString().equals("health")) REC.add("01000");
-        else if (arr.get(8).toString().equals("services")) REC.add("00100"); else if (arr.get(8).toString().equals("at_home"))  REC.add("00010"); else REC.add("00001");
-
-        if(arr.get(9).toString().equals("home")) REC.add("0000"); else if (arr.get(9).toString().equals("reputation")) REC.add("0100");
-        else if (arr.get(9).toString().equals("course")) REC.add("0010"); else REC.add("0001");
-
-        REC.add(Integer.parseInt(arr.get(10).toString()));  // travel time to school
-
-        REC.add(Integer.parseInt(arr.get(11).toString())); // weekly study time
-
-        REC.add(Integer.parseInt(arr.get(12).toString()));  // number of past class failures
-
-        if(arr.get(13).toString().equals("no")) { REC.add(0); } else {  REC.add(1); }    //  extra educational (school) support
-
-        if(arr.get(14).toString().equals("no")) { REC.add(0); } else {  REC.add(1); }    // family educational support
-
-        if(arr.get(15).toString().equals("no")) { REC.add(0); } else {  REC.add(1); }    // extra-curricular activities
-
-        if(arr.get(16).toString().equals("no")) { REC.add(0); } else {  REC.add(1); }    // attended nursery school
-
-        if(arr.get(17).toString().equals("no")) { REC.add(0); } else {  REC.add(1); }    // Internet access at home
-
-        if(arr.get(18).toString().equals("no")) { REC.add(0); } else {  REC.add(1); }    // with a relationship
-
-        REC.add(Integer.parseInt(arr.get(19).toString())); // quality of family relationships
-        REC.add(Integer.parseInt(arr.get(20).toString())); // free time after school
-        REC.add(Integer.parseInt(arr.get(21).toString())); // going out with friends
-        REC.add(Integer.parseInt(arr.get(22).toString())); // current health status
-        REC.add(Integer.parseInt(arr.get(23).toString())); // number of school absences
-        REC.add(Integer.parseInt(arr.get(24).toString())); // quiz1
-        REC.add(Integer.parseInt(arr.get(25).toString())); // quiz2
+        REC.add(Integer.parseInt(arr.get(5).toString())); // free time after school
+        REC.add(Integer.parseInt(arr.get(6).toString())); // going out with friends
+        REC.add(Integer.parseInt(arr.get(7).toString())); // current health status
+        REC.add(Integer.parseInt(arr.get(8).toString())); // number of school absences
+        REC.add(Float.parseFloat(arr.get(9).toString())); // quiz1
+        REC.add(Float.parseFloat(arr.get(10).toString())); // quiz2
         return REC;
     }
 
 
-    public void ViewPieChart(float A, float B, float C, float D, float F)
+    public void ViewPieChart(float A, float B, float C, float D, float F, int count ,String status)
     {
-        ArrayList<PieEntry> visitors = new ArrayList<>();
-        visitors.add(new PieEntry(A, "A"));
-        visitors.add(new PieEntry(B, "B"));
-        visitors.add(new PieEntry(C, "C"));
-        visitors.add(new PieEntry(D, "D"));
-        visitors.add(new PieEntry(F, "F"));
 
-        PieDataSet pieDataSet = new PieDataSet(visitors, "Grades");
+        ArrayList<PieEntry> visitors;
+        if(status.equals("predict pass (with grades) / fail"))
+        {
+            A = A/ count*100;
+            B = B/ count*100;
+            C = C/ count*100;
+            D = D/ count*100;
+            F = F/ count*100;
+
+            visitors = new ArrayList<>();
+            visitors.add(new PieEntry(A, "Excellent"));
+            visitors.add(new PieEntry(B, "Very good"));
+            visitors.add(new PieEntry(C, "Good"));
+            visitors.add(new PieEntry(D, "Acceptable"));
+            visitors.add(new PieEntry(F, "Fail"));
+
+        }
+        else
+        {
+            float pass = (A+B+C+D)/count*100;
+            float fail = 100 - pass;
+
+            visitors = new ArrayList<>();
+            visitors.add(new PieEntry(pass , "Pass"));
+            visitors.add(new PieEntry(fail , "Fail"));
+
+        }
+
+        PieDataSet pieDataSet = new PieDataSet(visitors, "");
         pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         pieDataSet.setValueTextColor(Color.BLACK);
         pieDataSet.setValueTextSize(16f);
@@ -463,7 +450,7 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
         PieData pieData = new PieData(pieDataSet);
         pieChart.setData(pieData);
         pieChart.getDescription().setEnabled(false);
-        pieChart.setCenterText("GRADES");
+        pieChart.setCenterText("PERFORMANCE");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             pieChart.animateX(1500);
         }
@@ -473,33 +460,61 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
 
     }
 
-    public void cross_validation_leave_one_out(List<List<Object>>train_DS)
+    public void cross_validation_leave_one_out(List<List<Object>>train_DS, String status)
     {
 
         List<String> predicted_values = new ArrayList<>();
         List<String> real_values = new ArrayList<>();
-
+        List<String> predicted_values22 = new ArrayList<>();
 
         for(int i =0 ; i< train_DS.size(); i ++)
-            {
-                List<Object> test_rec = train_DS.get(i);
-                real_values.add(test_rec.get(26).toString());
-                char predicted = KNN_testing1(train_DS,test_rec,25,i);
-                predicted_values.add(String.valueOf(predicted));
-            }
+        {
+            List<Object> test_rec = train_DS.get(i);
+            real_values.add(test_rec.get(11).toString());
+            char predicted = KNN_testing1(train_DS,test_rec,23,i);
+            if(predicted=='A'||predicted=='B'||predicted=='C'||predicted=='D')
+                predicted_values22.add("Pass");
+            else  predicted_values22.add("Fail");
+            predicted_values.add(String.valueOf(predicted));
+        }
 
+        SharedPreferences sharedPref = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        if(status.equals("predict pass (with grades) / fail"))
+        {
             float sum = 0;
-         for(int i =0 ; i<predicted_values.size();i++)
+            for(int i =0 ; i<predicted_values.size();i++)
             {
-              //  Toast.makeText(getApplicationContext(),"predicted_value: "+predicted_values.get(i)+" real_values: "+real_values.get(i),Toast.LENGTH_SHORT).show();
-              //  System.out.println("predicted_value: "+predicted_values.get(i)+" real_values: "+real_values.get(i));
                 if(predicted_values.get(i).equals(real_values.get(i)))
                     sum++;
             }
-
             float accuracy = sum/predicted_values.size()*100;
             textAccuracy.setText("Accuracy: "+String.valueOf(accuracy));
-            //Toast.makeText(getApplicationContext(),"Accuracy : "+accuracy,Toast.LENGTH_LONG).show();
+            editor.putString(status, String.valueOf(accuracy));
+
+        }
+        else if (status.equals("predict pass / fail"))
+        {
+            float s = 0;
+            for(int i =0 ; i<predicted_values22.size();i++)
+            {
+                String ch = real_values.get(i);
+                if(ch.equals("A")||ch.equals("B")||ch.equals("C")||ch.equals("D"))
+                    ch = "Pass";
+                else
+                    ch = "Fail";
+                if(ch.equals(predicted_values22.get(i)))
+                    s++;
+            }
+
+            float accuracy = s/predicted_values22.size()*100;
+            textAccuracy.setText("Accuracy: "+String.valueOf(accuracy));
+            editor.putString(status, String.valueOf(accuracy));
+        }
+        editor.apply();
+
+
+
     }
 
     public char KNN_testing1 (List<List<Object>> train_DS, List<Object> test_record, int K, int test_index)
@@ -542,9 +557,8 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
             temp = sorteddistances.get(i);
             double x = temp.get(0);
             int index = (int)x;
-            String grade = String.valueOf(train_DS.get(index).get(26));
+            String grade = String.valueOf(train_DS.get(index).get(11));
 
-            //    Toast.makeText(getApplicationContext(),"index ="+index+" "+"grade ="+grade,Toast.LENGTH_LONG).show();
             if(grade.equals("A"))
                 A++;
             else if(grade.equals("B"))
@@ -571,6 +585,33 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
             return weighted_decision(train_DS,sorteddistances);
     }
 
+    public void viewStdAtRisk( ArrayAdapter<String> arrStdsAtRisk)
+    {
+        if(arrStdsAtRisk.getCount()==0)
+        {
+            textStudentsAtRisk.setText("there is no students at risk in "+SpinnerCourses.getSelectedItem().toString());
+            listStdsAtRisk.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
 
+            textStudentsAtRisk.setText("Student at risk in: "+SpinnerCourses.getSelectedItem().toString());
+            listStdsAtRisk.setAdapter(arrStdsAtRisk);
+            listStdsAtRisk.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void changeListViewColor()
+    {
+        arrStdsAtRisk = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                View view = super.getView(position, convertView, parent);
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+                tv.setTextColor(Color.BLACK);
+                return view;
+            }
+        };
+    }
 
 }

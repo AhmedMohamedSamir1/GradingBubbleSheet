@@ -1,25 +1,15 @@
 package com.example.gp2021.data.model;
 
-public class subject_student {
-   String absence;
-   String quiz1;
-   String  quiz2;
-   String stdID;
+public class course_student {
+    String quiz1;
+    String  quiz2;
+    String stdID;
 
-    public subject_student(){}
-    public subject_student(String absence, String quiz1, String quiz2, String stdID) {
-        this.absence = absence;
+    public course_student(){}
+    public course_student(String quiz1, String quiz2, String stdID) {
         this.quiz1 = quiz1;
         this.quiz2 = quiz2;
         this.stdID = stdID;
-    }
-
-    public String getAbsence() {
-        return absence;
-    }
-
-    public void setAbsence(String absence) {
-        this.absence = absence;
     }
 
     public String getQuiz1() {

@@ -5,19 +5,17 @@ public class exam {
     String examName;
     String examDate;
     String examGrade;
-    String userID;
 
     public exam()
     {
 
     }
 
-    public exam(String examID, String examName, String examDate, String examGrade, String userID) {
+    public exam(String examID, String examName, String examDate, String examGrade) {
         this.examID = examID;
         this.examName = examName;
         this.examDate = examDate;
         this.examGrade = examGrade;
-        this.userID = userID;
 
     }
 
@@ -53,13 +51,7 @@ public class exam {
         this.examGrade = examGrade;
     }
 
-    public String getUserID() {
-        return userID;
-    }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
 
 
 }

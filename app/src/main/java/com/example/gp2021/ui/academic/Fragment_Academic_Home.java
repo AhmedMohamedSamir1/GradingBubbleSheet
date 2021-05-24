@@ -4,6 +4,7 @@ package com.example.gp2021.ui.academic;
 // l
 // l
 // y2
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,14 +16,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
-import com.example.gp2021.ui.instructor.AddAnswers;
+import com.example.gp2021.ui.instructor.CreateExam;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Fragment_Academic_Home#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Fragment_Academic_Home extends Fragment implements View.OnClickListener  {
+public class Fragment_Academic_Home extends Fragment implements View.OnClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,14 +69,15 @@ public class Fragment_Academic_Home extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment__academic__home, container, false);
         View view = inflater.inflate(R.layout.fragment__academic__home, container, false);
         ImageView RemoveStudent=view.findViewById(R.id.removeStudent_ImageButton);
         ImageView AddStudent=view.findViewById(R.id.addStudent_ImageButton);
+
         RemoveStudent.setOnClickListener(this);
         AddStudent.setOnClickListener(this);
-        return view;
 
+
+        return view;
     }
 
     @Override
@@ -83,16 +85,14 @@ public class Fragment_Academic_Home extends Fragment implements View.OnClickList
         switch (view.getId())
         {
             case R.id.removeStudent_ImageButton:
-
                 Toast.makeText(getActivity(),"Removed",Toast.LENGTH_SHORT).show();
-
                 break;
-
             case R.id.addStudent_ImageButton:
-                Toast.makeText(getActivity(),"Added",Toast.LENGTH_SHORT).show();
-
-
+                //Toast.makeText(getActivity(),"Added",Toast.LENGTH_SHORT).show();
+                Intent I = new Intent(getActivity(), addStudent.class); //3shan da fragment
+                startActivity(I);
                 break;
+
         }
 
     }

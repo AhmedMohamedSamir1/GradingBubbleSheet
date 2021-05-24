@@ -123,8 +123,8 @@ public class DeleteExam extends AppCompatActivity {
                                 String examName = ds.child("examName").getValue().toString();
                                 String examDate = ds.child("examDate").getValue().toString();
                                 String examGrade = ds.child("examGrade").getValue().toString();
-                                String userID = ds.child("userID").getValue().toString();
-                                exam EXAM = new exam(examID, examName, examDate, examGrade, userID);
+                              //  String userID = ds.child("userID").getValue().toString();
+                                exam EXAM = new exam(examID, examName, examDate, examGrade);
                                 if(EXAM.getExamName().equals(ExamName))
                                 {
                                     exam_ID = EXAM.getExamID();
