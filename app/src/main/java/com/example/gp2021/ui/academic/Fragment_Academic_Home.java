@@ -4,6 +4,7 @@ package com.example.gp2021.ui.academic;
 // l
 // l
 // y2
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
+import com.example.gp2021.ui.instructor.CreateExam;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,7 +88,9 @@ public class Fragment_Academic_Home extends Fragment implements View.OnClickList
                 Toast.makeText(getActivity(),"Removed",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.addStudent_ImageButton:
-                Toast.makeText(getActivity(),"Added",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"Added",Toast.LENGTH_SHORT).show();
+                Intent I = new Intent(getActivity(), addStudent.class); //3shan da fragment
+                startActivity(I);
                 break;
 
         }
