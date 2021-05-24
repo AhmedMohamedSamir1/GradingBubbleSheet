@@ -81,7 +81,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     /*My Vars*/
     int StudentID = -1;
     int EammNumber = -1;
-    List<exam_question> ExamAnswares = new ArrayList<>();
+    List<exam_question> ExamAnswares = new ArrayList<>(); // model answer
     String[] UserAnswares = null;
     int Grade = 0;
     /*--------*/
@@ -620,7 +620,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                             if (UserAnswares[count] == que.getQuestionAnswer())
                                 Grade += Integer.valueOf(que.getQuestionGrade());
                             rootRef.child("exam_question_student").child(String.valueOf(EammNumber))
-                                    .child(String.valueOf(StudentID))
+
                                     .child(String.valueOf(count + 1))
                                     .setValue(
                                             new exam_question_student(

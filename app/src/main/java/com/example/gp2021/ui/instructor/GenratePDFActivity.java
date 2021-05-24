@@ -187,7 +187,7 @@ public class GenratePDFActivity extends AppCompatActivity {
                     FileOutputStream fos = new FileOutputStream(f);
                     pdfDocument.writeTo(fos);
                     pdfDocument.close();
-                    fos.close();
+                    fos.close() ;
                     Toast.makeText(getApplicationContext(), "PDF Save on" + f.getPath(), Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
                     e.printStackTrace();
