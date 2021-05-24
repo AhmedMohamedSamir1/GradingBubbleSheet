@@ -1,7 +1,7 @@
 package com.example.gp2021.ui.academic;
 //Tst.
 // Ke
-// l
+
 // l
 // y2
 import android.os.Bundle;
