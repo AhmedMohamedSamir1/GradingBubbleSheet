@@ -8,16 +8,7 @@
     android:padding="5dp"
     tools:context=".ui.instructor.CreateExam">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:id="@+id/EuserID"
-        android:hint="User ID"
-        android:layout_height="45dp"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:id="@+id/EexamID"
-        android:hint="Exam ID"
-        android:layout_height="45dp"/>
+
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/EexamName"
@@ -38,7 +29,23 @@
         android:id="@+id/btnCreateExam"
         android:text="Create exam"
         android:layout_height="45dp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/btnGoToInstr"
+        android:text="academic"
+        android:layout_height="45dp"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/btnAddYearWork"
+        android:text="add year work"
+        android:layout_height="45dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/btnAddCourse"
+        android:text="add course"
+        android:layout_height="45dp"/>
 
 
 </LinearLayout>

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.gp2021.R;
 
@@ -52,6 +53,7 @@ public class Fragment_Academic_Home extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,7 @@ public class Fragment_Academic_Home extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -67,4 +70,6 @@ public class Fragment_Academic_Home extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment__academic__home, container, false);
     }
+
+
 }
