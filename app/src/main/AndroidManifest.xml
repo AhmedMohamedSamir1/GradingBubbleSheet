@@ -64,6 +64,12 @@
         <activity android:name=".ui.instructor.GenratePDFActivity" />
 
         <activity android:name=".ui.academic.AcademicHome" />
+        <activity android:name=".ui.academic.addYearWork" />
+        <activity android:name=".ui.academic.addStudent" />
+        <activity android:name=".ui.academic.add_course" />
+        
+
+
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
