@@ -61,6 +61,8 @@
         <activity android:name=".ui.login.SignupActivity" />
         <activity android:name=".ui.instructor.Instructor_Mail" />
         <activity android:name=".ui.instructor.InstructorHome" />
+        <activity android:name=".ui.instructor.GenratePDFActivity" />
+
         <activity android:name=".ui.academic.AcademicHome" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

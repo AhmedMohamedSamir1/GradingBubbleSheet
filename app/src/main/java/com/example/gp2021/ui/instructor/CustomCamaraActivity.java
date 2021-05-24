@@ -167,21 +167,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
             }
         });
-        SwitchCompat flashSwitch = findViewById(R.id.switchFlash);
-        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Toast.makeText(getApplicationContext(), "FlashON", Toast.LENGTH_LONG).show();
-                } else {
-                    Camera.Parameters param = camera.getParameters();
-                    camera.stopPreview();
-                    param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                    camera.setParameters(param);
-                    camera.startPreview();
-                    Toast.makeText(getApplicationContext(), "FlashOFF", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+      
         MyQuestAndAns = new HashMap<String, String>(); //Key : question Number , //value : Answer
         ExamsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

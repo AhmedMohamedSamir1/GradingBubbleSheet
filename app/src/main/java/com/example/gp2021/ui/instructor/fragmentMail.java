@@ -174,12 +174,12 @@ public class fragmentMail extends Fragment implements  View.OnClickListener {
                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
-                                                       //    Toast.makeText(getActivity(),dataSnapshot.getKey().toString(),Toast.LENGTH_LONG).show();
+                                                         Toast.makeText(getActivity(),dataSnapshot.getKey().toString(),Toast.LENGTH_LONG).show();
 
                                                                         String StudMail=dataSnapshot.child("email").getValue().toString();
                                                                         String StudName=dataSnapshot.child("stdName").getValue().toString();
 
-                                                           //Toast.makeText(getActivity(),"StudMail : "+StudMail+" Name: "+StudName,Toast.LENGTH_LONG).show();
+                                                          Toast.makeText(getActivity(),"StudMail : "+StudMail+" Name: "+StudName,Toast.LENGTH_LONG).show();
                                                                         String Msg="Dear "+StudName+"\n kindly know that your grade in "+ExName+" is : "+Grade+"\n Your ID is : "+StudID+"\n If you found any thing wrong please contact us "+"\n GP2021 Team";
 
 
