@@ -177,7 +177,7 @@ public class AddAnswers extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            exam_question EXAM_QUESTION = new exam_question(catID, exam_ID,QestAns,QuesGrade,QestNum);
+                            exam_question EXAM_QUESTION = new exam_question(exam_ID,QestAns,QuesGrade,QestNum);
 
                             databaseReference.child("exam_question").child(exam_ID).child(QestNum).setValue(EXAM_QUESTION).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

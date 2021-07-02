@@ -10,21 +10,13 @@ public class exam_question {
 
     public exam_question(){}
 
-    public exam_question(String catID, String examID, String questionAnswer, String questionGrade, String questionID) {
-        this.catID = catID;
+    public exam_question(String examID, String questionAnswer, String questionGrade, String questionID) {
         this.examID = examID;
         this.questionAnswer = questionAnswer;
         this.questionGrade = questionGrade;
         this.questionID = questionID;
     }
 
-    public String getCatID() {
-        return catID;
-    }
-
-    public void setCatID(String catID) {
-        this.catID = catID;
-    }
 
     public String getExamID() {
         return examID;

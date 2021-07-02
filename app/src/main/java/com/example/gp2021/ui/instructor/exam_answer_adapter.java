@@ -61,6 +61,10 @@ public class exam_answer_adapter extends ArrayAdapter {
 
         //--------------------------------------------------------------------
 
+        for(int i =0 ; i<examAnswer.length;i++)
+            examAnswer[i] = examAnsHolder.examAns.get(i);
+
+
 
           //  Toast.makeText(getContext(), "flag true", Toast.LENGTH_SHORT).show();
             flag = false;
@@ -79,7 +83,53 @@ public class exam_answer_adapter extends ArrayAdapter {
                 holder.radioAnsD.setChecked(true);
 
 
+            holder.radioAnsA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked)
+                    {
+                    //    Toast.makeText(getContext(), "changed at " +String.valueOf(position)+" "+((RadioButton)buttonView).getText(), Toast.LENGTH_SHORT).show();
+                        examAnsHolder.examAns.set(position,((RadioButton)buttonView).getText().toString());
+                    }
 
+                }
+            });
+
+        holder.radioAnsB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    //    Toast.makeText(getContext(), "changed at " +String.valueOf(position)+" "+((RadioButton)buttonView).getText(), Toast.LENGTH_SHORT).show();
+                    examAnsHolder.examAns.set(position,((RadioButton)buttonView).getText().toString());
+                }
+
+            }
+        });
+
+        holder.radioAnsC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    //    Toast.makeText(getContext(), "changed at " +String.valueOf(position)+" "+((RadioButton)buttonView).getText(), Toast.LENGTH_SHORT).show();
+                    examAnsHolder.examAns.set(position,((RadioButton)buttonView).getText().toString());
+                }
+
+            }
+        });
+
+        holder.radioAnsD.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    //    Toast.makeText(getContext(), "changed at " +String.valueOf(position)+" "+((RadioButton)buttonView).getText(), Toast.LENGTH_SHORT).show();
+                    examAnsHolder.examAns.set(position,((RadioButton)buttonView).getText().toString());
+                }
+
+            }
+        });
 
 
         singleItem.setOnClickListener(new View.OnClickListener() {

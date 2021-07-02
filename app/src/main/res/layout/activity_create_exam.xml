@@ -23,7 +23,14 @@
         android:layout_width="match_parent"
         android:id="@+id/EexamGrade"
         android:hint="Exam Grade"
+        android:inputType="numberDecimal"
         android:layout_height="45dp"/>
+    <Spinner
+        android:layout_width="match_parent"
+        android:id="@+id/spnNumOfQuestions"
+        android:hint="Exam Grade"
+        android:layout_height="45dp"/>
+
     <Button
         android:layout_width="match_parent"
         android:id="@+id/btnCreateExam"
@@ -45,6 +52,7 @@
     <Button
         android:layout_width="wrap_content"
         android:id="@+id/addMan"
+        android:text="Add Answer Manually"
         android:layout_height="wrap_content"/>
 
 

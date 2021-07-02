@@ -10,9 +10,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.gp2021.R;
@@ -36,9 +38,10 @@ import java.util.Calendar;
 
 public class CreateExam extends AppCompatActivity {
 
-    EditText user_ID, exam_ID, exam_Name, exam_Grade, exam_Date;
+    EditText user_ID, exam_Name, exam_Grade, exam_Date;
     Button createExam;
     ProgressDialog LoadingBar;
+    Spinner spnNumOfQuestion;
     private DatePickerDialog.OnDateSetListener DSL;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,13 @@ public class CreateExam extends AppCompatActivity {
         });
 
 
+       ArrayAdapter<String> numOfQues  = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        numOfQues.add("select number of exam questions");
+        numOfQues.add("20");
+        numOfQues.add("30");
+        numOfQues.add("60");
+        spnNumOfQuestion = (Spinner)findViewById(R.id.spnNumOfQuestions);
+        spnNumOfQuestion.setAdapter(numOfQues);
 
         createExam = (Button)findViewById(R.id.btnCreateExam);
         createExam.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +142,8 @@ public class CreateExam extends AppCompatActivity {
         LoadingBar.setMessage("please wait until exam is created");
         LoadingBar.setCanceledOnTouchOutside(false);
 
-        if(!examName.equals("")&&!examDate.equals("")&&!examGrade.equals(""))
+        if(!examName.equals("")&&!examDate.equals("")&&!examGrade.equals("")&&
+                !spnNumOfQuestion.getSelectedItem().toString().equals("select number of exam questions"))
         {
             LoadingBar.show();
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -148,7 +159,7 @@ public class CreateExam extends AppCompatActivity {
                         examID = String.valueOf(cc);
                     }
 
-                    exam examData = new exam(examID,examName,examDate,examGrade,"20");
+                    exam examData = new exam(examID,examName,examDate,examGrade,spnNumOfQuestion.getSelectedItem().toString());
                     boolean flag = true;
                     for (DataSnapshot ds: snapshot.child("exam").getChildren())
                     {
