@@ -178,10 +178,10 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                     databaseReference.child("exam").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                String ExamName = ds.child("examName").getValue().toString();
+                            for (DataSnapshot ds2 : dataSnapshot.getChildren()) {
+                                String ExamName = ds2.child("examName").getValue().toString();
                                 if (ExamName.equals(SelectedExam)) {
-                                    String ID = ds.child("examID").getValue().toString();
+                                    String ID = ds2.child("examID").getValue().toString();
                                     EammNumber = Integer.valueOf(ID);
                                     ExamAnswares.clear();
                                     databaseReference.child("exam_question").child(ID).addListenerForSingleValueEvent(new ValueEventListener() {
