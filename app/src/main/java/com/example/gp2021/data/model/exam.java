@@ -5,18 +5,28 @@ public class exam {
     String examName;
     String examDate;
     String examGrade;
+    String numOfQuestions;
 
     public exam()
     {
 
     }
 
-    public exam(String examID, String examName, String examDate, String examGrade) {
+    public exam(String examID, String examName, String examDate, String examGrade, String numOfQuestions) {
         this.examID = examID;
         this.examName = examName;
         this.examDate = examDate;
         this.examGrade = examGrade;
+        this.numOfQuestions = numOfQuestions;
 
+    }
+
+    public String getNumOfQuestions() {
+        return numOfQuestions;
+    }
+
+    public void setNumOfQuestions(String numOfQuestions) {
+        this.numOfQuestions = numOfQuestions;
     }
 
     public String getExamID() {

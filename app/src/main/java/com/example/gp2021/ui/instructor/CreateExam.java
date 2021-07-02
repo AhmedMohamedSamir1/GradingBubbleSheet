@@ -44,6 +44,18 @@ public class CreateExam extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_exam);
+
+        Button addMan = (Button)findViewById(R.id.addMan);
+        addMan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent I = new Intent(CreateExam.this, addAnswerManually.class);
+                startActivity(I);
+            }
+        });
+
+
+
         createExam = (Button)findViewById(R.id.btnCreateExam);
         createExam.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,16 +90,6 @@ public class CreateExam extends AppCompatActivity {
             }
         };
 //---------------------------------------------------
-
-    Button btnGoToInstr = (Button)findViewById(R.id.btnGoToInstr);
-        btnGoToInstr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent I = new Intent(CreateExam.this, addStudent.class);
-                startActivity(I);
-
-            }
-        });
 
         Button btnYearWork = (Button)findViewById(R.id.btnAddYearWork);
         btnYearWork.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +148,7 @@ public class CreateExam extends AppCompatActivity {
                         examID = String.valueOf(cc);
                     }
 
-                    exam examData = new exam(examID,examName,examDate,examGrade);
+                    exam examData = new exam(examID,examName,examDate,examGrade,"20");
                     boolean flag = true;
                     for (DataSnapshot ds: snapshot.child("exam").getChildren())
                     {

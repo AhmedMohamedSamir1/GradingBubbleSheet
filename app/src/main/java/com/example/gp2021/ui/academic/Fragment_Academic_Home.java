@@ -85,12 +85,14 @@ public class Fragment_Academic_Home extends Fragment implements View.OnClickList
         switch (view.getId())
         {
             case R.id.removeStudent_ImageButton:
-                Toast.makeText(getActivity(),"Removed",Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(getActivity(),"Removed",Toast.LENGTH_SHORT).show();
+                Intent I = new Intent(getActivity(), delete_student.class); //3shan da fragment
+                startActivity(I);
                 break;
             case R.id.addStudent_ImageButton:
                 //Toast.makeText(getActivity(),"Added",Toast.LENGTH_SHORT).show();
-                Intent I = new Intent(getActivity(), addStudent.class); //3shan da fragment
-                startActivity(I);
+                Intent I2 = new Intent(getActivity(), addStudent.class); //3shan da fragment
+                startActivity(I2);
                 break;
 
         }

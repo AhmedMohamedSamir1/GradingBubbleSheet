@@ -124,7 +124,7 @@ public class DeleteExam extends AppCompatActivity {
                                 String examDate = ds.child("examDate").getValue().toString();
                                 String examGrade = ds.child("examGrade").getValue().toString();
                               //  String userID = ds.child("userID").getValue().toString();
-                                exam EXAM = new exam(examID, examName, examDate, examGrade);
+                                exam EXAM = new exam(examID, examName, examDate, examGrade,"20");
                                 if(EXAM.getExamName().equals(ExamName))
                                 {
                                     exam_ID = EXAM.getExamID();

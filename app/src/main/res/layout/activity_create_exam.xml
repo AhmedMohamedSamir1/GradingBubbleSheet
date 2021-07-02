@@ -29,11 +29,6 @@
         android:id="@+id/btnCreateExam"
         android:text="Create exam"
         android:layout_height="45dp"/>
-    <Button
-        android:layout_width="match_parent"
-        android:id="@+id/btnGoToInstr"
-        android:text="academic"
-        android:layout_height="45dp"/>
 
     <Button
         android:layout_width="match_parent"
@@ -46,6 +41,11 @@
         android:id="@+id/btnAddCourse"
         android:text="add course"
         android:layout_height="45dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:id="@+id/addMan"
+        android:layout_height="wrap_content"/>
 
 
 </LinearLayout>
