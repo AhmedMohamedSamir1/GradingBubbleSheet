@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.gp2021.R;
 import com.example.gp2021.ui.instructor.CreateExam;
+import com.example.gp2021.ui.instructor.PredictPerformanceKnnActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,11 +71,19 @@ public class Fragment_Academic_Home extends Fragment implements View.OnClickList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment__academic__home, container, false);
+
         ImageView RemoveStudent=view.findViewById(R.id.removeStudent_ImageButton);
         ImageView AddStudent=view.findViewById(R.id.addStudent_ImageButton);
+        ImageView addStudentYearWork = view.findViewById(R.id.btn_addGrade);
+        ImageView IVAddCourse = view.findViewById(R.id.btnAddCourse);
+        ImageView IV_Prediction = view.findViewById(R.id.IV_Prediction);
+
 
         RemoveStudent.setOnClickListener(this);
         AddStudent.setOnClickListener(this);
+        addStudentYearWork.setOnClickListener(this);
+        IVAddCourse.setOnClickListener(this);
+        IV_Prediction.setOnClickListener(this);
 
 
         return view;
@@ -93,6 +102,18 @@ public class Fragment_Academic_Home extends Fragment implements View.OnClickList
                 //Toast.makeText(getActivity(),"Added",Toast.LENGTH_SHORT).show();
                 Intent I2 = new Intent(getActivity(), addStudent.class); //3shan da fragment
                 startActivity(I2);
+                break;
+            case R.id.btn_addGrade:
+                Intent I3 = new Intent(getActivity(), addYearWork.class); //3shan da fragment
+                startActivity(I3);
+                break;
+            case R.id.btnAddCourse:
+                Intent I4 = new Intent(getActivity(), add_course.class); //3shan da fragment
+                startActivity(I4);
+                break;
+            case R.id.IV_Prediction:
+                Intent I5 = new Intent(getActivity(), PredictPerformanceKnnActivity.class); //3shan da fragment
+                startActivity(I5);
                 break;
 
         }
