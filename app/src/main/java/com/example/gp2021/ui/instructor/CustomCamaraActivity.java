@@ -642,7 +642,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(getApplicationContext(), "your exam created successfully " + Grade, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "your Grade " + Grade, Toast.LENGTH_LONG).show();
                                         } else
                                             Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_LONG).show();
                                     }
