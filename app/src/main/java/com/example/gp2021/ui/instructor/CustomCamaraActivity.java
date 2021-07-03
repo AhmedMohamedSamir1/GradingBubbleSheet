@@ -82,7 +82,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     int StudentID = -1;
     int EammNumber = -1;
     List<exam_question> ExamAnswares = new ArrayList<>(); // model answer
-    String[] UserAnswares = null;
+    String[] UserAnswares = null; //user answer
     int Grade = 0;
     /*--------*/
     int NumOfQuestions;
@@ -188,12 +188,12 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
                                             for (DataSnapshot ds : dataSnapshot2.getChildren()) {
-                                                String catID = ds.child("catID").getValue().toString();
+                                              //  String catID = ds.child("catID").getValue().toString();
                                                 String examID = ds.child("examID").getValue().toString();
                                                 String questionAnswer = ds.child("questionAnswer").getValue().toString();
                                                 String questionGrade = ds.child("questionGrade").getValue().toString();
                                                 String questionID = ds.child("questionID").getValue().toString();
-                                                exam_question question = new exam_question(catID, examID, questionAnswer, questionGrade, questionID);
+                                                exam_question question = new exam_question(examID, questionAnswer, questionGrade, questionID);
                                                 ExamAnswares.add(question);
                                             }
                                         }
