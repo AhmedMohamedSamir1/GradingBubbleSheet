@@ -8,7 +8,9 @@ public class exam_question {
     String questionGrade;
     String questionID;
 
-    public exam_question(){}
+    public exam_question(){
+
+    }
 
     public exam_question(String examID, String questionAnswer, String questionGrade, String questionID) {
         this.examID = examID;

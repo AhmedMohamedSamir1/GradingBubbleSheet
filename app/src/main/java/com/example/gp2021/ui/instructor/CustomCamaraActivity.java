@@ -82,7 +82,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
     int StudentID = -1;
     int EammNumber = -1;
     List<exam_question> ExamAnswares = new ArrayList<>(); // model answer
-    String[] UserAnswares = null;
+    String[] UserAnswares = null; //user answer
     int Grade = 0;
     /*--------*/
     int NumOfQuestions;
@@ -167,7 +167,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
 
             }
         });
-      
+
         MyQuestAndAns = new HashMap<String, String>(); //Key : question Number , //value : Answer
         ExamsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -178,17 +178,17 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                     databaseReference.child("exam").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                String ExamName = ds.child("examName").getValue().toString();
+                            for (DataSnapshot ds2 : dataSnapshot.getChildren()) {
+                                String ExamName = ds2.child("examName").getValue().toString();
                                 if (ExamName.equals(SelectedExam)) {
-                                    String ID = ds.child("examID").getValue().toString();
+                                    String ID = ds2.child("examID").getValue().toString();
                                     EammNumber = Integer.valueOf(ID);
                                     ExamAnswares.clear();
                                     databaseReference.child("exam_question").child(ID).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
                                             for (DataSnapshot ds : dataSnapshot2.getChildren()) {
-
+                                              //  String catID = ds.child("catID").getValue().toString();
                                                 String examID = ds.child("examID").getValue().toString();
                                                 String questionAnswer = ds.child("questionAnswer").getValue().toString();
                                                 String questionGrade = ds.child("questionGrade").getValue().toString();
@@ -617,7 +617,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
                         int count = 0;
                         for (exam_question que : ExamAnswares) {
-                            if (UserAnswares[count] == que.getQuestionAnswer())
+                            if (UserAnswares[count].equals(que.getQuestionAnswer()))
                                 Grade += Integer.valueOf(que.getQuestionGrade());
                             rootRef.child("exam_question_student").child(String.valueOf(EammNumber))
 
@@ -642,7 +642,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(getApplicationContext(), "your exam created successfully", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "your Grade " + Grade, Toast.LENGTH_LONG).show();
                                         } else
                                             Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_LONG).show();
                                     }
@@ -710,6 +710,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                             UserAnswares = new String[60];
                             for (int i = 0; i < 60; i += 3) {
                                 UserAnswares[i] = Answers[i];
+                                UserAnswares[i + 1] = Answers[i + 1];
+                                UserAnswares[i + 2] = Answers[i + 2];
                                 A.append((i + 1) + "." + Answers[i] + "-" + (i + 2) + "." + Answers[i + 1] + "-" + (i + 3) + "." + Answers[i + 2]).append("\n");
                             }
                             ansTxtView.setText(A.toString());
@@ -731,6 +733,8 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                             UserAnswares = new String[30];
                             for (int i = 0; i < 30; i += 3) {
                                 UserAnswares[i] = Answers[i];
+                                UserAnswares[i + 1] = Answers[i + 1];
+                                UserAnswares[i + 2] = Answers[i + 2];
                                 A.append((i + 1) + "." + Answers[i] + "-" + (i + 2) + "." + Answers[i + 1] + "-" + (i + 3) + "." + Answers[i + 2]).append("\n");
                             }
                             ansTxtView.setText(A.toString());
@@ -752,6 +756,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                             UserAnswares = new String[20];
                             for (int i = 0; i < 20; i += 2) {
                                 UserAnswares[i] = Answers[i];
+                                UserAnswares[i + 1] = Answers[i + 1];
                                 A.append((i + 1) + "." + Answers[i] + "-" + (i + 2) + "." + Answers[i + 1]).append("\n");
                             }
                             ansTxtView.setText(A.toString());
