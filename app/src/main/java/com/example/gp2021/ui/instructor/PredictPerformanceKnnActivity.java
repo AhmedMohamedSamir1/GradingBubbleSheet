@@ -299,7 +299,6 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
             int index = (int)x;
             String grade = String.valueOf(train_DS.get(index).get(11));
 
-            //    Toast.makeText(getApplicationContext(),"index ="+index+" "+"grade ="+grade,Toast.LENGTH_LONG).show();
             if(grade.equals("A"))
                 A++;
             else if(grade.equals("B"))
@@ -310,7 +309,6 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
                 D++;
             else F++;
         }
-        //    Toast.makeText(getApplicationContext(),"A="+A +" "+ "B="+B+" "+"C="+C+" "+"D="+D+" "+"F="+F,Toast.LENGTH_LONG).show();
 
         if(A>B && A>C && A>D && A>F)
         {  return 'A'; }
@@ -355,8 +353,6 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
             else
                 F+=weight;
         }
-
-        //  Toast.makeText(getApplicationContext(),"A="+A +" "+ "B="+B+" "+"C="+C+" "+"D="+D+" "+"F="+F,Toast.LENGTH_LONG).show();
         if(A>B && A>C && A>D && A>F)
         {   return 'A'; }
         else if(B>A && B>C && B>D && B>F)
@@ -367,7 +363,6 @@ public class PredictPerformanceKnnActivity extends AppCompatActivity {
         {    return 'D'; }
         else
         {   return 'F';  }
-
     }
 
     //------------------------------------------------------------------------

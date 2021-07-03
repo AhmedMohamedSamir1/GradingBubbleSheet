@@ -141,7 +141,7 @@ public class fragment1Home extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btn_AddAnswers:
-                intent = new Intent(getActivity(), AddAnswers.class);
+                intent = new Intent(getActivity(), addAnswerManually.class);
                 startActivity(intent);
                 break;
             case R.id.btnRemoveExam:

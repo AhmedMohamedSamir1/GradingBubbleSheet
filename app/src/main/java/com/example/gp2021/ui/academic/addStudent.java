@@ -172,7 +172,7 @@ public class addStudent extends AppCompatActivity {
                     String std_gender = gender.getText().toString();
                     String std_TravelTime = travel_time(travelTime.getText().toString());
                     String std_studyTime = study_time(studyTime.getText().toString());
-                    String std_failures = failures.getText().toString();
+                    String std_failures = getNumOfPastFailure(failures.getText().toString());
                     String std_activities = activities.getText().toString();
                     String std_free_time = free_time_OR_go_out(freeTime.getText().toString());
                     String std_go_out = free_time_OR_go_out(goOut.getText().toString());
@@ -429,6 +429,14 @@ public class addStudent extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+    }
+    public String getNumOfPastFailure(String num)
+    {
+        int N = Integer.parseInt(num);
+        if(N < 3)
+            return num;
+        else
+            return "4";
     }
     public void clear()
     {

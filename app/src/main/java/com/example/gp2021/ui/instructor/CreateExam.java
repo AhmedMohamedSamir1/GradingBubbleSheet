@@ -48,15 +48,6 @@ public class CreateExam extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_exam);
 
-        Button addMan = (Button)findViewById(R.id.addMan);
-        addMan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent I = new Intent(CreateExam.this, addAnswerManually.class);
-                startActivity(I);
-            }
-        });
-
 
        ArrayAdapter<String> numOfQues  = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         numOfQues.add("select number of exam questions");
@@ -101,26 +92,9 @@ public class CreateExam extends AppCompatActivity {
         };
 //---------------------------------------------------
 
-        Button btnYearWork = (Button)findViewById(R.id.btnAddYearWork);
-        btnYearWork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent I = new Intent(CreateExam.this, addYearWork.class);
-                startActivity(I);
-
-            }
-        });
 
 
-        Button btnAddCourse = (Button)findViewById(R.id.btnAddCourse);
-        btnAddCourse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent I = new Intent(CreateExam.this, add_course.class);
-                startActivity(I);
 
-            }
-        });
 
     }
     public void createExam()
