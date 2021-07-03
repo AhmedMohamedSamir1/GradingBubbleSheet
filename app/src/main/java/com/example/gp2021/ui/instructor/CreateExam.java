@@ -99,14 +99,9 @@ public class CreateExam extends AppCompatActivity {
     }
     public void createExam()
     {
-       // user_ID = (EditText)findViewById(R.id.EuserID);
-       // exam_ID = (EditText)findViewById(R.id.EexamID);
         exam_Name = (EditText)findViewById(R.id.EexamName);
         exam_Grade = (EditText)findViewById(R.id.EexamGrade);
         exam_Date = (EditText)findViewById(R.id.EexamDate);
-
-      //  String userID = user_ID.getText().toString();
-        //String examID = exam_ID.getText().toString();
         String examName = exam_Name.getText().toString().toLowerCase();
         String examDate = exam_Date.getText().toString();
         String examGrade = exam_Grade.getText().toString();
@@ -147,16 +142,19 @@ public class CreateExam extends AppCompatActivity {
                     if(flag)
                     {
                         rootRef.child("exam").child(examID).setValue(examData);
-                        rootRef.child("exam").child(examID).setValue(examData).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        rootRef.child("exam").child(examID).setValue(examData).
+                                addOnCompleteListener(new OnCompleteListener<Void>() {
 
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful())
                                 {
-                                    Toast.makeText(getApplicationContext(),"your exam created successfully",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),"your exam created successfully"
+                                            ,Toast.LENGTH_LONG).show();
                                 }
                                 else
-                                    Toast.makeText(getApplicationContext(),"Network Error",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),"Network Error",Toast.LENGTH_LONG)
+                                            .show();
                                 LoadingBar.dismiss();
                             }
                         });
@@ -164,7 +162,8 @@ public class CreateExam extends AppCompatActivity {
 
 
                     else
-                    {Toast.makeText(getApplicationContext(),"exam name is already created",Toast.LENGTH_LONG).show();  LoadingBar.dismiss(); }
+                    {Toast.makeText(getApplicationContext(),"exam name is already created",Toast.LENGTH_LONG)
+                            .show();  LoadingBar.dismiss(); }
                 }
 
                 @Override

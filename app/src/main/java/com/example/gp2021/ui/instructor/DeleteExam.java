@@ -35,14 +35,7 @@ public class DeleteExam extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_exam);
-
-
-
-
         SpinnerExam = (Spinner) findViewById(R.id.Spinner_selectExamtodelete);
-
-
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("exam");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -51,19 +44,13 @@ public class DeleteExam extends AppCompatActivity {
                 are.add("Select your exam to delete");
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String ExamName = ds.child("examName").getValue().toString();
-                    // Toast.makeText(CustomCamaraActivity.this, "You Select exam: "+userType, Toast.LENGTH_SHORT).show();
                     are.add(ExamName);
 
                 }
-
                 areasAdapter = new ArrayAdapter<String> (DeleteExam.this, android.R.layout.simple_spinner_item,  are);
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                // areasAdapter.add("Select your Exam"); //This is the text that will be displayed as hint.
                 SpinnerExam.setAdapter(areasAdapter);
-                //ListViewExams.setPrompt("Select your Exam");
                 SpinnerExam.setSelection(0, false);
-
-                //ListViewExams.setSelection(areasAdapter.getCount()-1);
                 areasAdapter.notifyDataSetChanged();
 
             }
@@ -82,19 +69,12 @@ public class DeleteExam extends AppCompatActivity {
                 if (position > 0) {
 
                     readData(QuestAndAns -> {
-                        // MyQuestAndAns.putAll(QuestAndAns);
                         Toast.makeText(getApplicationContext(), SelectedExam[0],Toast.LENGTH_LONG).show();
 
                         //KML HnA
 
-
                     });
-
-
-
                 }
-
-
             }
 
             @Override
@@ -128,14 +108,16 @@ public class DeleteExam extends AppCompatActivity {
                                 if(EXAM.getExamName().equals(ExamName))
                                 {
                                     exam_ID = EXAM.getExamID();
-                                    databaseReference.child("exam").child(exam_ID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    databaseReference.child("exam").child(exam_ID).removeValue()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
 
                                             are.remove(SpinnerExam.getSelectedItemPosition());
                                             SpinnerExam.setSelection(0,false);
                                             areasAdapter.notifyDataSetChanged();
-                                            Toast.makeText(getApplicationContext(), "exam removed successfully",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "exam removed successfully"
+                                                    ,Toast.LENGTH_SHORT).show();
                                             databaseReference.child("exam_question").child(exam_ID).removeValue();
                                         }
                                     });

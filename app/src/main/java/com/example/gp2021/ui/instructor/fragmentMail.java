@@ -128,12 +128,9 @@ public class fragmentMail extends Fragment implements  View.OnClickListener {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0) {
-            //    Toast.makeText(getActivity(), (String) parent.getItemAtPosition(position),Toast.LENGTH_LONG).show();
             String Selected=(String) parent.getItemAtPosition(position);
-
-                    DatabaseReference databaseReference22 = FirebaseDatabase.getInstance().getReference().child("exam");
-
-                    databaseReference22.addListenerForSingleValueEvent(new ValueEventListener() {
+            DatabaseReference databaseReference22 = FirebaseDatabase.getInstance().getReference().child("exam");
+            databaseReference22.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -142,72 +139,38 @@ public class fragmentMail extends Fragment implements  View.OnClickListener {
                                 String ExName = ds2.child("examName").getValue().toString();
                                if(ExName.equals(Selected))
                                {
-                                // Toast.makeText(getActivity(), "You Select exam: "+ExamID, Toast.LENGTH_SHORT).show();
-
                                    DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("exam_student").child(ExamID);
-
                                    databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
                                        @Override
                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                               //String ExamIDD = ds.getValue().toString();
-
-                                               // Toast.makeText(CustomCamaraActivity.this, "You Select exam: "+userType, Toast.LENGTH_SHORT).show();
                                                 String StudID = ds.child("stdID").getValue().toString();
                                                String Grade=ds.child("grade").getValue().toString();
-
-                                             //  Toast.makeText(getActivity(),"Grade : "+Grade,Toast.LENGTH_LONG).show();
-
-
-                                               //KDA m3aya ElStudID w Grade bta3oooo w kman m3aya esm elExam elly howa : ExName
-                                               // Fadel Ageeb elEmail w Name bta3 Elstudent Daaa [ email , stdName ] in student
-
-
-                                                            //sa
-
-
-                                               DatabaseReference databaseReference21 = FirebaseDatabase.getInstance().getReference().child("student").child(StudID);
-
+                                               DatabaseReference databaseReference21 = FirebaseDatabase.getInstance()
+                                                       .getReference().child("student").child(StudID);
                                                databaseReference21.addListenerForSingleValueEvent(new ValueEventListener() {
                                                    @Override
                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-
-                                                         Toast.makeText(getActivity(),dataSnapshot.getKey().toString(),Toast.LENGTH_LONG).show();
-
-                                                                        String StudMail=dataSnapshot.child("email").getValue().toString();
-                                                                        String StudName=dataSnapshot.child("stdName").getValue().toString();
-
-                                                          Toast.makeText(getActivity(),"StudMail : "+StudMail+" Name: "+StudName,Toast.LENGTH_LONG).show();
-                                                                        String Msg="Dear "+StudName+"\n kindly know that your grade in "+ExName+" is : "+Grade+"\n Your ID is : "+StudID+"\n If you found any thing wrong please contact us "+"\n GP2021 Team";
-
-
-                                                       JavaMailAPI javaMailAPI = new JavaMailAPI(getActivity(), StudMail, "["+ExName +" Grade]", Msg);
-
+                                                       Toast.makeText(getActivity(),dataSnapshot.getKey().toString()
+                                                               ,Toast.LENGTH_LONG).show();
+                                                       String StudMail=dataSnapshot.child("email").getValue().toString();
+                                                       String StudName=dataSnapshot.child("stdName").getValue().toString();
+                                                       Toast.makeText(getActivity(),"StudMail : "+StudMail+" Name: "
+                                                               +StudName,Toast.LENGTH_LONG).show();
+                                                       String Msg="Dear "+StudName+"\n kindly know that your grade in "
+                                                               +ExName+" is : "+Grade+"\n Your ID is : "+StudID
+                                                               +"\n If you found any thing wrong please contact us "
+                                                               +"\n GP2021 Team";
+                                                       JavaMailAPI javaMailAPI = new JavaMailAPI(getActivity()
+                                                               , StudMail, "["+ExName +" Grade]", Msg);
                                                        javaMailAPI.execute();
-                                                       Toast.makeText(getActivity(), "Sent", Toast.LENGTH_LONG).show();
-
-
-
-
+                                                       Toast.makeText(getActivity(), "Sent"
+                                                               , Toast.LENGTH_LONG).show();
                                                    }
-
                                                    @Override
                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
                                                    }
                                                });
-
-
-
-
-
-                                               //sa
-
-
-
-
                                            }
                                        }
 

@@ -49,7 +49,6 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class AcademicHome extends AppCompatActivity implements ChipNavigationBar.OnItemSelectedListener {
     private ConstraintLayout constraintLayout;
-    private AnimationDrawable animationDrawable;
     private LoginViewModel loginViewModel;
     GoogleSignInClient mGoogleSignInClient;
     ChipNavigationBar navView;
@@ -59,18 +58,12 @@ public class AcademicHome extends AppCompatActivity implements ChipNavigationBar
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_academic_home);
-        getSupportActionBar().hide();
 
 
 
 
         constraintLayout = findViewById(R.id.academicHome);
-        // initializing animation drawable by getting background from constraint layout
-        animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
-        // setting enter fade animation duration to 3 seconds
-        animationDrawable.setEnterFadeDuration(3000);
-        // setting exit fade animation duration to 2 seconds
-        animationDrawable.setExitFadeDuration(2000);
+
         navView = findViewById(R.id.bottom_navigation2);
         navView.setOnItemSelectedListener(this);
 
@@ -95,22 +88,7 @@ public class AcademicHome extends AppCompatActivity implements ChipNavigationBar
             Toast.makeText(getApplicationContext(),"Fragment error",Toast.LENGTH_LONG).show();
         }
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (animationDrawable != null && !animationDrawable.isRunning()) {
-            // start the animation
-            animationDrawable.start();
-        }
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (animationDrawable != null && animationDrawable.isRunning()) {
-            // stop the animation
-            animationDrawable.stop();
-        }
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

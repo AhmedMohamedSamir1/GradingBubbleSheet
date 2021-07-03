@@ -37,13 +37,16 @@ public class ForgetPassword extends AppCompatActivity {
                 FirebaseAuth.getInstance().sendPasswordResetEmail(Email).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplicationContext(),"Email sent to you. ",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext()
+                                ,"Email sent to you. ",Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(),"Email is incorrect,\nPlease try again. ",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext()
+                                ,"Email is incorrect,\nPlease try again. "
+                                ,Toast.LENGTH_SHORT).show();
 
                     }
                 });

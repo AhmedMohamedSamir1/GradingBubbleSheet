@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:id="@+id/academicHome"
     tools:context=".ui.academic.AcademicHome"
-    android:background="@drawable/drawable_gradient_animation_list"
 
     android:layout_height="match_parent">
 

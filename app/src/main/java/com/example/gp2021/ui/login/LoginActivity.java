@@ -485,7 +485,8 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            StyleableToast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT, R.style.toaststyle).show();
+                            StyleableToast.makeText(getApplicationContext(), "Authentication failed."
+                                    , Toast.LENGTH_SHORT, R.style.toaststyle).show();
                             updateUI(null);
                         }
 

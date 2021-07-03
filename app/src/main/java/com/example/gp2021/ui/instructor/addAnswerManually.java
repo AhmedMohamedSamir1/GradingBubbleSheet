@@ -69,7 +69,7 @@ public class addAnswerManually extends AppCompatActivity {
         listViewExamAns = (ListView)findViewById(R.id.lstViewExamAns);
 
 
-        LoadingBar = new ProgressDialog(getApplicationContext());
+        LoadingBar = new ProgressDialog(this);
         btnSaveExamAnswer = (Button)findViewById(R.id.btnSaveExamAnswer);
         btnSaveExamAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +139,7 @@ public class addAnswerManually extends AppCompatActivity {
         });
     }
 
-    public void getExamAnswers()
+    public  void getExamAnswers()
     {
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -6,8 +6,11 @@ public class exam {
     String examDate;
     String examGrade;
     String numOfQuestions;
-
     public exam()
+    {
+        
+    }
+    public exam(String examID, String examName, String examDate, String examGrade)
     {
 
     }

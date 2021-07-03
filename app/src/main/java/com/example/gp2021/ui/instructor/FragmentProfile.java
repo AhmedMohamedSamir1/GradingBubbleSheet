@@ -165,7 +165,8 @@ public class FragmentProfile extends Fragment {
                             @Override
                             public void onSuccess(Void aVoid) {
 
-                                StyleableToast.makeText(getApplicationContext(),"Account deleted .. ", Toast.LENGTH_SHORT,R.style.toastErrortyle).show();
+                                StyleableToast.makeText(getApplicationContext(),"Account deleted .. "
+                                        , Toast.LENGTH_SHORT,R.style.toastErrortyle).show();
                                 ExplosionField explosionField = ExplosionField.attach2Window(getActivity());
                                 explosionField.explode(view);
                                 upButton.performClick();

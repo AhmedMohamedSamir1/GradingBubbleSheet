@@ -92,6 +92,8 @@ dependencies {
     implementation files('libs/activation.jar')
     implementation files('libs/additionnal.jar')
     implementation files('libs/mail.jar')
+    implementation "com.github.skydoves:landscapist-glide:1.2.6"
+
 //    implementation project(':chip-navigation-bar')
 //    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
