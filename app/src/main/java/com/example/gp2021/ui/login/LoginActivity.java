@@ -401,7 +401,7 @@ public class LoginActivity extends AppCompatActivity {
                     .textColor(Color.WHITE)
                     .backgroundColor(Color.BLUE)
                     .show();
-            if (account.getEmail().equals("ibrahimkelany98@gmail.com")||account.getEmail().equals("ahmedmohamedmvp@gmail.com")) {
+            if (account.getEmail().equals("ibrahimkelany98@gmail.com")||account.getEmail().equals("ahmedmohamedmvp@gmail.com")||account.getEmail().equals("eslamnasser796@gmail.com")) {
 
 
                 Intent Acade = new Intent(this, AcademicHome.class);

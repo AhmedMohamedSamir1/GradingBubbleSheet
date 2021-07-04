@@ -621,7 +621,7 @@ public class CustomCamaraActivity extends AppCompatActivity implements SurfaceHo
                                 Grade += Integer.valueOf(que.getQuestionGrade());
                             rootRef.child("exam_question_student").child(String.valueOf(EammNumber))
 
-                                    .child(String.valueOf(count + 1))
+                                    .child(String.valueOf(count + 1)).child(String.valueOf(StudentID))
                                     .setValue(
                                             new exam_question_student(
                                                     String.valueOf(EammNumber),
