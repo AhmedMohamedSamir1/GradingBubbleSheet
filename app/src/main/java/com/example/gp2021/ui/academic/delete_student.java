@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.gp2021.R;
 import com.example.gp2021.data.model.course_student;
+import com.example.gp2021.data.model.exam_question_student;
 import com.example.gp2021.data.model.exam_student;
 import com.example.gp2021.data.model.student;
 import com.google.firebase.database.DataSnapshot;
@@ -77,9 +78,12 @@ public class delete_student extends AppCompatActivity {
                 {
                     student std = ds.getValue(student.class);
                     if(std.getStdName().equals(stdName))
-                    { studentID = std.getStdID(); break;}
+                    {
+                        studentID = std.getStdID();
+                        rootRef.child("student").child(studentID).removeValue();
+                        break;
+                    }
                 }
-               //rootRef.child("student").child(studentID).removeValue();
 
                 //----------------------- remove from course_student --------------------------------
 
@@ -90,7 +94,8 @@ public class delete_student extends AppCompatActivity {
                         course_student cs = ds2.getValue(course_student.class);
                         if(cs.getStdID().equals(studentID)) {
                            // Toast.makeText(getApplicationContext(),ds.getKey()+" "+ cs.getStdID(), Toast.LENGTH_SHORT).show();
-                         //   rootRef.child("course_student").child(ds.getKey()).child(cs.getStdID()).removeValue();
+                            rootRef.child("course_student").child(ds.getKey()).child(cs.getStdID()).removeValue();
+                            break;
                         }
                     }
                 }
@@ -99,16 +104,32 @@ public class delete_student extends AppCompatActivity {
                 {
                     for(DataSnapshot ds2: ds.getChildren())
                     {
-                        exam_student ES = ds2.getValue(exam_student.class); // there are error here
+                        exam_student ES = ds2.getValue(exam_student.class);
                         if(ES.getStdID().equals(studentID)) {
                             // Toast.makeText(getApplicationContext(),ds.getKey()+" "+ ES.getStdID(), Toast.LENGTH_SHORT).show();
-                            //   rootRef.child("course_student").child(ds.getKey()).child(ES.getStdID()).removeValue();
+                            rootRef.child("exam_student").child(ds.getKey()).child(ES.getStdID()).removeValue();
+                            break;
                         }
                     }
                 }
-                //-----------------------------------------------------------------------
 
-
+                //----------------------------- delete from exam_question_student ----------------------------------------
+                for(DataSnapshot ds : snapshot.child("exam_question_student").getChildren())
+                {
+                    for(DataSnapshot ds2: ds.getChildren()) {
+                        for (DataSnapshot ds3 : ds2.getChildren()) {
+                           exam_question_student E_Q_S = ds3.getValue(exam_question_student.class);
+                           if(E_Q_S.getStdID().equals(studentID))
+                           {
+                               rootRef.child("exam_question_student").child(ds.getKey()).child(ds2.getKey()).child(E_Q_S.getStdID()).removeValue();
+                               break;
+                           }
+                       }
+                    }
+                }
+                Toast.makeText(getApplicationContext(),"student deleted successfully", Toast.LENGTH_SHORT).show();
+                studentsNames.remove(spnStdName.getSelectedItem().toString());
+                spnStdName.setSelection(0,false);
 
             }
 

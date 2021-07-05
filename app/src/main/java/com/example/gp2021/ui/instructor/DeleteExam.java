@@ -28,7 +28,6 @@ import java.util.List;
 public class DeleteExam extends AppCompatActivity {
     Spinner SpinnerExam;
     DatabaseReference databaseReference;
-    String exam_ID;
     ArrayAdapter<String> areasAdapter;
     List<String > are;
     @Override
@@ -94,36 +93,28 @@ public class DeleteExam extends AppCompatActivity {
 
                     // [2] Write Code HERE !
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-                    databaseReference.child("exam").addListenerForSingleValueEvent(new ValueEventListener()     {
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener()     {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                                String examID = ds.child("examID").getValue().toString();
-                                String examName = ds.child("examName").getValue().toString();
-                                String examDate = ds.child("examDate").getValue().toString();
-                                String examGrade = ds.child("examGrade").getValue().toString();
-                              //  String userID = ds.child("userID").getValue().toString();
-                                exam EXAM = new exam(examID, examName, examDate, examGrade,"20");
+                            String exam_ID="";
+                            for (DataSnapshot ds : dataSnapshot.child("exam").getChildren()) {
+                                exam EXAM = ds.getValue(exam.class);
                                 if(EXAM.getExamName().equals(ExamName))
                                 {
                                     exam_ID = EXAM.getExamID();
-                                    databaseReference.child("exam").child(exam_ID).removeValue()
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-
-                                            are.remove(SpinnerExam.getSelectedItemPosition());
-                                            SpinnerExam.setSelection(0,false);
-                                            areasAdapter.notifyDataSetChanged();
-                                            Toast.makeText(getApplicationContext(), "exam removed successfully"
-                                                    ,Toast.LENGTH_SHORT).show();
-                                            databaseReference.child("exam_question").child(exam_ID).removeValue();
-                                        }
-                                    });
+                                    Toast.makeText(getApplicationContext(), "exam removed successfully "+EXAM.getExamID() ,Toast.LENGTH_SHORT).show();
+                                       are.remove(SpinnerExam.getSelectedItemPosition());
+                                        SpinnerExam.setSelection(0,false);
+                                        areasAdapter.notifyDataSetChanged();
+                                    databaseReference.child("exam").child(exam_ID).removeValue();
+                                    databaseReference.child("exam_question").child(exam_ID).removeValue();
+                                    databaseReference.child("exam_student").child(exam_ID).removeValue();
+                                    databaseReference.child("exam_question_student").child(exam_ID).removeValue();
                                     break;
                                 }
                             }
+
+
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
