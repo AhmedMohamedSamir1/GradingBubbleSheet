@@ -17,7 +17,7 @@ Another way to grade bubble sheets is using a hardware scanner which costs high.
 ### Scan exams.
 
 ## Explore the Project on youtube
-[Project Link](https://www.linkedin.com/in/yourprofile)
+[Project Link](https://youtu.be/gEnS3YjD3OA)
 
 
 
