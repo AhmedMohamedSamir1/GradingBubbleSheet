@@ -16,7 +16,7 @@ Another way to grade bubble sheets is using a hardware scanner which costs high.
 ### Predict students' grades using machine learning and view students at risk and display it in the form of pie chart.
 ### Scan exams.
 
-## Explore the Project on youtube
+## Explore the project on youtube
 [Project Link](https://youtu.be/gEnS3YjD3OA)
 
 
